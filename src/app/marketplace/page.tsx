@@ -6,7 +6,7 @@ import { AgentCard } from "@/components/agent-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { agents, customMarketplaceCategories, industryCategories } from "@/lib/mock-data.tsx";
+import { agents, customMarketplaceCategories, industryCategories } from "@/lib/mock-data";
 import { Search } from "lucide-react";
 import {
   Pagination,
@@ -23,6 +23,7 @@ const AGENTS_PER_PAGE = 9;
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
+  const [industry, setIndustry] = useState('all');
   const [rating, setRating] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -30,10 +31,11 @@ export default function MarketplacePage() {
     return agents.filter(agent => {
       const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) || agent.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = category === 'all' || agent.category === category;
+      const matchesIndustry = industry === 'all' || agent.industry === industry;
       const matchesRating = rating === 'all' || agent.rating >= parseInt(rating);
-      return matchesSearch && matchesCategory && matchesRating;
+      return matchesSearch && matchesCategory && matchesRating && matchesIndustry;
     });
-  }, [searchQuery, category, rating]);
+  }, [searchQuery, category, industry, rating]);
 
   const totalPages = Math.ceil(filteredAgents.length / AGENTS_PER_PAGE);
   
@@ -69,7 +71,7 @@ export default function MarketplacePage() {
 
         <section className="mb-12">
           <div className="bg-background p-6 rounded-lg shadow-md">
-            <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+            <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
               <div className="lg:col-span-2 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input 
@@ -85,6 +87,16 @@ export default function MarketplacePage() {
                 </SelectTrigger>
                 <SelectContent>
                   {customMarketplaceCategories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+               <Select value={industry} onValueChange={setIndustry}>
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="Industry" />
+                </SelectTrigger>
+                <SelectContent>
+                  {industryCategories.map(cat => (
                     <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                   ))}
                 </SelectContent>
