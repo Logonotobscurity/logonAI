@@ -1,9 +1,12 @@
 
+"use client";
+
+import { useState, useMemo } from "react";
 import { AgentCard } from "@/components/agent-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { agents, marketplaceCategories } from "@/lib/mock-data.tsx";
+import { agents, customMarketplaceCategories, industryCategories } from "@/lib/mock-data.tsx";
 import { Search } from "lucide-react";
 import {
   Pagination,
@@ -15,7 +18,44 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+const AGENTS_PER_PAGE = 9;
+
 export default function MarketplacePage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [category, setCategory] = useState('all');
+  const [industry, setIndustry] = useState('all');
+  const [rating, setRating] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const filteredAgents = useMemo(() => {
+    return agents.filter(agent => {
+      const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) || agent.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = category === 'all' || agent.category === category;
+      const matchesIndustry = industry === 'all' || agent.industry === industry;
+      const matchesRating = rating === 'all' || agent.rating >= parseInt(rating);
+      return matchesSearch && matchesCategory && matchesIndustry && matchesRating;
+    });
+  }, [searchQuery, category, industry, rating]);
+
+  const totalPages = Math.ceil(filteredAgents.length / AGENTS_PER_PAGE);
+  const currentAgents = filteredAgents.slice(
+    (currentPage - 1) * AGENTS_PER_PAGE,
+    currentPage * AGENTS_PER_PAGE
+  );
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentPage(1);
+  };
+  
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo(0, 0);
+    }
+  };
+
+
   return (
     <div className="bg-secondary/30">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -28,76 +68,93 @@ export default function MarketplacePage() {
 
         <section className="mb-12">
           <div className="bg-background p-6 rounded-lg shadow-md">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-              <div className="md:col-span-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input placeholder="Find an AI agent..." className="h-12 pl-10" />
-                </div>
+            <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+              <div className="lg:col-span-2 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input 
+                  placeholder="Find an AI agent..." 
+                  className="h-12 pl-10" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
-              <div>
-                 <Select>
-                  <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {marketplaceCategories.map(cat => (
-                      <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                 <Select>
-                  <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Rating" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="5">5 stars</SelectItem>
-                    <SelectItem value="4">4 stars & up</SelectItem>
-                    <SelectItem value="3">3 stars & up</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button className="h-12 w-full">Search</Button>
-            </div>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {customMarketplaceCategories.map(cat => (
+                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={rating} onValueChange={setRating}>
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder="Rating" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Any Rating</SelectItem>
+                  <SelectItem value="5">5 stars</SelectItem>
+                  <SelectItem value="4">4 stars & up</SelectItem>
+                  <SelectItem value="3">3 stars & up</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button type="submit" className="h-12 w-full">Search</Button>
+            </form>
           </div>
         </section>
         
         <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-            {agents.map((agent) => (
-              <AgentCard key={agent.id} agent={agent} />
-            ))}
-          </div>
+          {currentAgents.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {currentAgents.map((agent) => (
+                <AgentCard key={agent.id} agent={agent} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <h2 className="text-2xl font-headline mb-2">No Agents Found</h2>
+              <p className="text-muted-foreground">Try adjusting your search or filters to find what you're looking for.</p>
+            </div>
+          )}
         </section>
 
-        <section className="mt-12">
-           <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </section>
+        {totalPages > 1 && (
+          <section className="mt-12">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    href="#" 
+                    onClick={(e) => { e.preventDefault(); handlePageChange(currentPage - 1); }}
+                    aria-disabled={currentPage === 1}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                   <PaginationItem key={page}>
+                    <PaginationLink 
+                      href="#"
+                      isActive={currentPage === page}
+                      onClick={(e) => { e.preventDefault(); handlePageChange(page); }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    href="#" 
+                    onClick={(e) => { e.preventDefault(); handlePageChange(currentPage + 1); }}
+                    aria-disabled={currentPage === totalPages}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </section>
+        )}
 
       </div>
     </div>

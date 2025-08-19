@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { agents, reviews } from "@/lib/mock-data.tsx";
-import { MessageCircle, Star, TrendingUp } from "lucide-react";
+import { MessageCircle, Star } from "lucide-react";
 import { notFound } from "next/navigation";
-import Image from 'next/image';
 
 export default function AgentDetailPage({ params }: { params: { id: string } }) {
   const agent = agents.find((p) => p.id === params.id);
@@ -24,17 +23,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
             <Card className="sticky top-24 overflow-hidden">
-             <div className="relative w-full h-48">
-                <Image
-                    src={agent.avatar}
-                    alt={agent.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="bg-muted"
-                    data-ai-hint="futuristic technology"
-                />
-             </div>
-              <CardHeader className="p-6 items-center text-center -mt-16">
+              <CardHeader className="p-6 items-center text-center">
                  <Avatar className="w-32 h-32 border-4 border-background bg-background z-10">
                     <AvatarImage src={agent.avatar} alt={agent.name} />
                     <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
