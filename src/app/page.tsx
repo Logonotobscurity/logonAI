@@ -103,8 +103,8 @@ export default function Home() {
             className="w-full"
           >
             <CarouselContent>
-              {assessments.map((assessment, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+              {assessments.map((assessment) => (
+                <CarouselItem key={assessment.id} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
                     <Card className="h-full flex flex-col justify-between text-left transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                       <CardHeader>
@@ -164,6 +164,55 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <section id="community" className="py-16 md:py-24 bg-background dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-16">
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Innovate & Partner with LOG_ON</h2>
+            <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Join our ecosystem of creators and build the future of autonomous business.</p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3 max-w-4xl mx-auto">
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Become a Creator</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-body text-muted-foreground">Build, publish, and monetize your AI agents & automations on LOG_ON.</p>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline">Get Started</Button>
+                </CardFooter>
+              </Card>
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:100ms]">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Submit Your Solutions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-body text-muted-foreground">Got an idea? Share your no-code/low-code automations with our global audience.</p>
+                </CardContent>
+                 <CardFooter>
+                   <Button variant="outline">Submit Solution</Button>
+                </CardFooter>
+              </Card>
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:200ms]">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Monetize Your Creations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="font-body text-muted-foreground">Leverage our marketplace for fair revenue sharing and reach a growing user base.</p>
+                </CardContent>
+                 <CardFooter>
+                   <Button variant="outline">Learn More</Button>
+                </CardFooter>
+              </Card>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
+
+    
+
+    
