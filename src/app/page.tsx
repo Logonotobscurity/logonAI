@@ -8,7 +8,7 @@ import { ArrowRight, Mic, Search, Send } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
-import { capabilities, assessments, agents } from "@/lib/mock-data.tsx";
+import { capabilities, assessments, agents } from "@/lib/mock-data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

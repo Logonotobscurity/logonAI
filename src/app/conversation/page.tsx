@@ -14,7 +14,7 @@ import { useSearchParams } from 'next/navigation';
 import { useVoice } from "@/hooks/use-voice";
 import { aiDrivenMatching } from "@/ai/flows/ai-driven-matching";
 import Link from "next/link";
-import { agents } from "@/lib/mock-data.tsx";
+import { agents } from "@/lib/mock-data";
 
 
 export default function ConversationPage() {

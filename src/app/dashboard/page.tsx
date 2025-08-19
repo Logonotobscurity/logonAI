@@ -20,7 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { quickActions, activityFeed, agents } from "@/lib/mock-data.tsx";
+import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
 
 
