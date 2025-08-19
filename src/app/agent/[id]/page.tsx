@@ -1,3 +1,4 @@
+// This file is no longer needed and can be deleted. I am leaving it for now but it will be removed in a future step.
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

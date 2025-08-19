@@ -13,6 +13,7 @@ import { useSearchParams } from 'next/navigation';
 import { useVoice } from "@/hooks/use-voice";
 import { aiDrivenMatching } from "@/ai/flows/ai-driven-matching";
 import Link from "next/link";
+import { marketplaceProducts } from "@/lib/mock-data.tsx";
 
 
 export default function ConversationPage() {
@@ -79,7 +80,8 @@ export default function ConversationPage() {
             speak(reasoning);
             
             if (agentSuggestions.length > 0) {
-              setSuggestedAgents(agentSuggestions);
+              const suggestedProducts = marketplaceProducts.filter(p => agentSuggestions.includes(p.id));
+              setSuggestedAgents(suggestedProducts);
             }
 
         } catch (error) {
@@ -181,11 +183,11 @@ export default function ConversationPage() {
                                 <h3 className="font-semibold mb-2 flex items-center gap-2"><Briefcase className="h-5 w-5"/> Suggested Agents</h3>
                                 {suggestedAgents.length > 0 ? (
                                 <ul className="space-y-2">
-                                     {suggestedAgents.map((agentId) => (
-                                     <li key={agentId} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                                        <span>Agent {agentId}</span>
-                                        <Link href={`/agent/${agentId}`}>
-                                            <Button variant="outline" size="sm">View Profile</Button>
+                                     {suggestedAgents.map((product) => (
+                                     <li key={product.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                        <span className="truncate">{product.name}</span>
+                                        <Link href={`/product/${product.id}`}>
+                                            <Button variant="outline" size="sm">View</Button>
                                         </Link>
                                     </li>
                                      ))}
