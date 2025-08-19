@@ -8,7 +8,7 @@ import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, 
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
-import { marketplaceProducts, capabilities, assessments, agents } from "@/lib/mock-data.tsx";
+import { capabilities, assessments, agents } from "@/lib/mock-data.tsx";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

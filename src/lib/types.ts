@@ -13,6 +13,8 @@ export interface Agent {
   reviewCount: number;
   tags: string[];
   isTrending?: boolean;
+  category?: string;
+  industry?: string;
 }
 
 export interface Question {
