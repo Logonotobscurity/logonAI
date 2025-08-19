@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb, Lock, Scaling, Rocket } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +8,21 @@ import { AgentCard } from "@/components/agent-card";
 import { agents } from "@/lib/mock-data";
 
 const capabilities = [
+  {
+    icon: <Lightbulb className="h-8 w-8 text-primary" />,
+    title: "Thinks Like Your Best Strategist",
+    description: "Our AI-driven platform analyzes your business needs to identify high-impact growth opportunities.",
+  },
+  {
+    icon: <Cpu className="h-8 w-8 text-primary" />,
+    title: "Spots Opportunities, Creates Solutions",
+    description: "From market gaps to internal inefficiencies, get tailored AI solutions and connect with experts.",
+  },
+  {
+    icon: <Rocket className="h-8 w-8 text-primary" />,
+    title: "Your Always-On Strategic Advisor",
+    description: "Leverage continuous, data-driven insights to make smarter decisions and stay ahead of the curve.",
+  },
   {
     icon: <Lock className="h-8 w-8 text-primary" />,
     title: "Enterprise-class automation",
