@@ -1,12 +1,12 @@
 
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { MarketplaceProduct } from "@/lib/types";
-import { Star } from "lucide-react";
+import { MessageCircle, Star } from "lucide-react";
 import Link from "next/link";
 
 interface AgentCardProps {
@@ -15,10 +15,9 @@ interface AgentCardProps {
 
 export function AgentCard({ agent }: AgentCardProps) {
   return (
-    <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+    <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
        <CardHeader className="p-6 flex-row gap-4 items-center">
         <Avatar className="w-16 h-16 border">
-            <AvatarImage src={agent.avatar} alt={agent.name} />
             <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div>
@@ -34,18 +33,23 @@ export function AgentCard({ agent }: AgentCardProps) {
             <span className="text-sm text-muted-foreground">({agent.reviewCount} reviews)</span>
         </div>
         <div className="flex flex-wrap gap-2">
-          {agent.tags.map((tag) => (
+          {agent.tags.slice(0, 3).map((tag) => (
             <Badge key={tag} variant="secondary">{tag}</Badge>
           ))}
         </div>
       </CardContent>
-      <CardFooter className="p-6 pt-0">
+      <div className="p-6 pt-0 mt-auto grid grid-cols-2 gap-2">
         <Link href={`/agent/${agent.id}`} passHref className="w-full">
-          <Button className="w-full" >
+          <Button className="w-full" variant="outline">
             View Profile
           </Button>
         </Link>
-      </CardFooter>
+        <Link href={`/conversation?q=Tell me more about ${agent.name}`} passHref className="w-full">
+          <Button className="w-full" >
+            <MessageCircle className="mr-2 h-4 w-4"/> Chat
+          </Button>
+        </Link>
+      </div>
     </Card>
   );
 }

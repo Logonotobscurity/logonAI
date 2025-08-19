@@ -25,10 +25,10 @@ export default function Home() {
     router.push(`/conversation?${params.toString()}`);
   }
 
-  const featuredAgents = agents.filter(a => a.isTrending).slice(0, 3);
+  const featuredAgents = agents.filter(a => a.isTrending).slice(0, 6);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col animate-in fade-in-50">
       <section className="relative bg-background dark:bg-gray-900 w-full">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
         <div className="container mx-auto max-w-screen-xl px-4 py-20 lg:py-32 text-center">
@@ -69,7 +69,7 @@ export default function Home() {
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {capabilities.map((capability, index) => (
-              <Card key={index} className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+              <Card key={index} className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
                 <CardHeader className="flex flex-row items-center gap-4 pb-4">
                   {capability.icon}
                   <CardTitle className="font-headline text-xl">{capability.title}</CardTitle>
@@ -106,7 +106,7 @@ export default function Home() {
               {assessments.map((assessment, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1 h-full">
-                    <Card className="h-full flex flex-col justify-between text-left">
+                    <Card className="h-full flex flex-col justify-between text-left transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                       <CardHeader>
                         <div className="flex items-start justify-between">
                             <div>

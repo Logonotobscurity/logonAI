@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { agents, reviews } from "@/lib/mock-data.tsx";
 import { MessageCircle, Star } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default function AgentDetailPage({ params }: { params: { id: string } }) {
@@ -18,14 +19,13 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
   const agentReviews = reviews.filter((r) => r.agentId === agent.id).slice(0,3);
   
   return (
-    <div className="bg-background">
+    <div className="bg-background animate-in fade-in-50">
       <div className="container mx-auto max-w-5xl py-12 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
             <Card className="sticky top-24 overflow-hidden">
               <CardHeader className="p-6 items-center text-center">
                  <Avatar className="w-32 h-32 border-4 border-background bg-background z-10">
-                    <AvatarImage src={agent.avatar} alt={agent.name} />
                     <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <CardTitle className="font-headline text-3xl">{agent.name}</CardTitle>
@@ -43,8 +43,8 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                         <Badge key={tag} variant="secondary">{tag}</Badge>
                     ))}
                 </div>
-                <Button size="lg" className="w-full mt-6">
-                    Start Conversation <MessageCircle className="ml-2 h-5 w-5" />
+                <Button size="lg" className="w-full mt-6" asChild>
+                    <Link href={`/conversation?q=Tell me more about ${agent.name}`}>Start Conversation <MessageCircle className="ml-2 h-5 w-5" /></Link>
                 </Button>
               </CardContent>
             </Card>
