@@ -24,8 +24,18 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
             <Card className="sticky top-24 overflow-hidden">
-              <CardHeader className="p-6 items-center text-center">
-                 <Avatar className="w-32 h-32 border-4 border-primary/20 mb-4">
+             <div className="relative w-full h-48">
+                <Image
+                    src={agent.avatar}
+                    alt={agent.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="bg-muted"
+                    data-ai-hint="futuristic technology"
+                />
+             </div>
+              <CardHeader className="p-6 items-center text-center -mt-16">
+                 <Avatar className="w-32 h-32 border-4 border-background bg-background z-10">
                     <AvatarImage src={agent.avatar} alt={agent.name} />
                     <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
                 </Avatar>

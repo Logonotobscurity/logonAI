@@ -4,13 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Agent } from "@/lib/types";
+import type { MarketplaceProduct } from "@/lib/types";
 import { MessageCircle, Star, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 interface AgentCardProps {
-  agent: Agent;
+  agent: MarketplaceProduct;
 }
 
 export function AgentCard({ agent }: AgentCardProps) {

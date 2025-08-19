@@ -3,18 +3,18 @@ import type { LucideIcon } from "lucide-react";
 import { z } from 'genkit';
 
 
-export interface Agent {
+export interface MarketplaceProduct {
   id: string;
   name: string;
-  avatar: string;
-  specialty: string;
   description: string;
-  rating: number;
-  reviewCount: number;
+  category: string;
+  industry?: string;
+  avatar: string; // was imageUrl, mapping to avatar
   tags: string[];
   isTrending?: boolean;
-  category?: string;
-  industry?: string;
+  specialty: string; // for compatibility
+  rating: number; // for compatibility
+  reviewCount: number; // for compatibility
 }
 
 export interface Question {

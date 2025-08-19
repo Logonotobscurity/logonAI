@@ -1,15 +1,36 @@
 
-import type { Agent, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceCategory } from './types';
+import type { MarketplaceProduct, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceCategory } from './types';
 import { AreaChart, Cpu, Lightbulb, Lock, Rocket, Scaling, ShieldCheck, Workflow, BarChart, Users, MessageCircle, FileText } from "lucide-react";
 
 
-export const agents: Agent[] = [
+export const customMarketplaceCategories: MarketplaceCategory[] = [
+  { value: 'all', label: 'All Categories' },
+  { value: 'automation-ops', label: 'Automation Ops' },
+  { value: 'assistant-tools', label: 'Assistant Tools' },
+  { value: 'process-mining', label: 'Process Mining' },
+  { value: 'integration-services', label: 'Integration Services' },
+  { value: 'agent-catalog', label: 'Agent Catalog' },
+];
+
+export const industryCategories: MarketplaceCategory[] = [
+  { value: 'all', label: 'All Industries' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'hr', label: 'Human Resources' },
+  { value: 'retail', label: 'Retail' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'insurance', label: 'Insurance' },
+  { value: 'real-estate', label: 'Real Estate' },
+];
+
+
+export const agents: MarketplaceProduct[] = [
+  // --- New placeholder agents (20) ---
   {
     id: 'ops-efficiency-optimizer',
     name: 'Ops Efficiency Optimizer',
     description: 'Detects process bottlenecks and suggests automations to improve throughput.',
     category: 'automation-ops',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Bottleneck Detection', 'Throughput', 'Automation Suggestions'],
     isTrending: true,
     specialty: 'Automation',
@@ -21,7 +42,7 @@ export const agents: Agent[] = [
     name: 'Sales Enrichment Assistant',
     description: 'Auto-enriches leads from public sources and prioritizes outreach.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Lead Enrichment', 'Scoring', 'Outreach'],
     specialty: 'Sales AI',
     rating: 4.9,
@@ -32,7 +53,7 @@ export const agents: Agent[] = [
     name: 'BI Quickstart Analyst',
     description: 'Generates dashboards and KPIs from your CSV/DB with guided prompts.',
     category: 'agent-catalog',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Dashboarding', 'KPI', 'Guided Analysis'],
     specialty: 'BI & Analytics',
     rating: 4.7,
@@ -43,7 +64,7 @@ export const agents: Agent[] = [
     name: 'Customer Feedback Miner',
     description: 'Clusters NPS/CSAT comments and recommends product improvements.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['NLP', 'Clustering', 'Insights'],
     specialty: 'Product Intelligence',
     rating: 4.8,
@@ -54,7 +75,7 @@ export const agents: Agent[] = [
     name: 'Inventory Forecast Bot',
     description: 'Predicts stock requirements and flags supply risks.',
     category: 'automation-ops',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Forecasting', 'Supply Chain', 'Alerts'],
     specialty: 'Supply Chain AI',
     rating: 4.9,
@@ -65,7 +86,7 @@ export const agents: Agent[] = [
     name: 'Policy Compliance Checker',
     description: 'Scans processes and documents to highlight compliance gaps.',
     category: 'agent-catalog',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Compliance', 'Audit', 'Policy'],
     specialty: 'Governance',
     rating: 5.0,
@@ -76,7 +97,7 @@ export const agents: Agent[] = [
     name: 'Security Log Sentinel',
     description: 'Analyzes logs for anomalies and suggests actionable responses.',
     category: 'agent-catalog',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['SIEM', 'Anomaly Detection', 'Response'],
     specialty: 'Cybersecurity',
     rating: 4.9,
@@ -87,7 +108,7 @@ export const agents: Agent[] = [
     name: 'Vendor Intake Orchestrator',
     description: 'Streamlines vendor onboarding and assessment workflows.',
     category: 'automation-ops',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Onboarding', 'Assessment', 'Workflow'],
     specialty: 'Procurement',
     rating: 4.7,
@@ -98,7 +119,7 @@ export const agents: Agent[] = [
     name: 'Content Brief Generator',
     description: 'Turns keywords into SEO-ready briefs with outline and references.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['SEO', 'Brief', 'Content'],
     specialty: 'Marketing AI',
     rating: 4.8,
@@ -109,7 +130,7 @@ export const agents: Agent[] = [
     name: 'IT Ops Auto Remediator',
     description: 'Detects common infra issues and triggers pre-approved runbooks.',
     category: 'automation-ops',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Runbooks', 'Infra', 'Monitoring'],
     specialty: 'IT Operations',
     rating: 4.9,
@@ -120,7 +141,7 @@ export const agents: Agent[] = [
     name: 'Cost Optimization Advisor',
     description: 'Finds cloud/app waste and recommends savings actions.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['FinOps', 'Savings', 'Recommendations'],
     specialty: 'Financial Strategy',
     rating: 5.0,
@@ -131,7 +152,7 @@ export const agents: Agent[] = [
     name: 'Contract Intelligence Agent',
     description: 'Extracts key terms from contracts and tracks obligations.',
     category: 'agent-catalog',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['OCR', 'Extraction', 'Obligations'],
     specialty: 'Legal Tech',
     rating: 4.8,
@@ -142,7 +163,7 @@ export const agents: Agent[] = [
     name: 'Recruiting Matcher',
     description: 'Matches candidates to roles and drafts outreach messages.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Matching', 'Outreach', 'HR'],
     specialty: 'HR Tech',
     rating: 4.9,
@@ -153,7 +174,7 @@ export const agents: Agent[] = [
     name: 'Support Auto Triage',
     description: 'Routes tickets by intent, urgency and sentiment with summaries.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Routing', 'Summaries', 'Sentiment'],
     specialty: 'Customer Support',
     rating: 4.7,
@@ -164,7 +185,7 @@ export const agents: Agent[] = [
     name: 'Partner Program Manager',
     description: 'Tracks partner leads, co-sell motions, and collateral requests.',
     category: 'automation-ops',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Partners', 'Pipeline', 'Enablement'],
     specialty: 'Partner Ops',
     rating: 4.8,
@@ -175,7 +196,7 @@ export const agents: Agent[] = [
     name: 'Churn Prediction Analyst',
     description: 'Scores accounts at risk and suggests save plays.',
     category: 'agent-catalog',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Churn', 'Save Plays', 'Scoring'],
     specialty: 'Customer Success',
     rating: 4.9,
@@ -186,7 +207,7 @@ export const agents: Agent[] = [
     name: 'Finance Close Buddy',
     description: 'Automates close checklist and reconciliations.',
     category: 'automation-ops',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Close', 'Reconciliation', 'Checklists'],
     specialty: 'Finance Automation',
     rating: 4.9,
@@ -197,7 +218,7 @@ export const agents: Agent[] = [
     name: 'Governance Drift Monitor',
     description: 'Alerts on configuration drift vs. policy baselines.',
     category: 'agent-catalog',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Drift', 'Baseline', 'Alerts'],
     specialty: 'Governance',
     rating: 4.8,
@@ -208,7 +229,7 @@ export const agents: Agent[] = [
     name: 'Data Quality Guardian',
     description: 'Continuously checks data pipelines and flags quality issues.',
     category: 'process-mining',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['DQ', 'Pipelines', 'Anomalies'],
     specialty: 'Data Engineering',
     rating: 4.9,
@@ -219,7 +240,7 @@ export const agents: Agent[] = [
     name: 'Meeting Notes Synthesizer',
     description: 'Turns call recordings into action items and CRM updates.',
     category: 'assistant-tools',
-    avatar: 'https://placehold.co/128x128.png',
+    avatar: 'https://placehold.co/400x300.png',
     tags: ['Transcription', 'Actions', 'CRM'],
     specialty: 'Productivity',
     rating: 4.8,
@@ -237,12 +258,6 @@ export const marketplaceCategories: MarketplaceCategory[] = [
   { value: 'agent-catalog', label: 'Agent Catalog' },
 ];
 
-export const industryCategories: MarketplaceCategory[] = [
-  { value: 'finance', label: 'Finance' },
-  { value: 'hr', label: 'Human Resources' },
-  { value: 'retail', label: 'Retail' },
-  { value: 'marketing', label: 'Marketing' },
-];
 
 export const assessments: Assessment[] = [
   {
