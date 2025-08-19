@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb, Lock, Scaling, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { AgentCard } from "@/components/agent-card";
-import { agents, capabilities, assessments } from "@/lib/mock-data";
+import { ProductCard } from "@/components/product-card";
+import { marketplaceProducts, capabilities, assessments } from "@/lib/mock-data.tsx";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -144,12 +144,12 @@ export default function Home() {
       <section id="marketplace" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Featured AI Experts</h2>
-            <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Connect with top-tier talent from our curated marketplace to bring your vision to life.</p>
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Featured AI Solutions</h2>
+            <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Connect with top-tier solutions from our curated marketplace to bring your vision to life.</p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {agents.slice(0, 3).map((agent) => (
-              <AgentCard key={agent.id} agent={agent} />
+            {marketplaceProducts.filter(p => p.isTrending).slice(0, 3).map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
           <div className="text-center mt-12">

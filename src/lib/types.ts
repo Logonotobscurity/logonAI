@@ -67,3 +67,19 @@ export interface Capability {
     title: string;
     description: string;
 }
+
+export interface MarketplaceProduct {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  industry?: string;
+  imageUrl: string;
+  tags: string[];
+  isTrending?: boolean;
+}
+
+export interface MarketplaceCategory {
+  value: string;
+  label: string;
+}

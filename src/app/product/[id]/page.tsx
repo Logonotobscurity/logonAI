@@ -100,6 +100,3 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     </div>
   );
 }
-
-// Create a new route file at src/app/product/[id]/page.tsx
-// I will need to create this new file. Let's do that now.

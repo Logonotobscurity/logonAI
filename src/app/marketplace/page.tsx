@@ -1,8 +1,8 @@
-import { AgentCard } from "@/components/agent-card";
+import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { agents } from "@/lib/mock-data";
+import { marketplaceProducts, customMarketplaceCategories, industryCategories } from "@/lib/mock-data";
 import { Search } from "lucide-react";
 import {
   Pagination,
@@ -13,20 +13,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-
-const marketplaceCategories = [
-  { value: 'automation-ops', label: 'Automation Ops' },
-  { value: 'assistant-tools', label: 'Assistant Tools' },
-  { value: 'process-mining', label: 'Process Mining' },
-  { value: 'integration-services', label: 'Integration Services' },
-];
-
-const industryCategories = [
-  { value: 'finance', label: 'Finance' },
-  { value: 'hr', label: 'Human Resources' },
-  { value: 'retail', label: 'Retail' },
-  { value: 'marketing', label: 'Marketing' },
-]
 
 export default function MarketplacePage() {
   return (
@@ -54,7 +40,7 @@ export default function MarketplacePage() {
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {marketplaceCategories.map(cat => (
+                    {customMarketplaceCategories.map(cat => (
                       <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                     ))}
                   </SelectContent>
@@ -79,8 +65,8 @@ export default function MarketplacePage() {
         
         <section>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {agents.map((agent) => (
-              <AgentCard key={agent.id} agent={agent} />
+            {marketplaceProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </section>
