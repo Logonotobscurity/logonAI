@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { AgentCard } from "@/components/agent-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,6 @@ const AGENTS_PER_PAGE = 9;
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
-  const [industry, setIndustry] = useState('all');
   const [rating, setRating] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -31,29 +30,31 @@ export default function MarketplacePage() {
     return agents.filter(agent => {
       const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) || agent.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = category === 'all' || agent.category === category;
-      const matchesIndustry = industry === 'all' || agent.industry === industry;
       const matchesRating = rating === 'all' || agent.rating >= parseInt(rating);
-      return matchesSearch && matchesCategory && matchesIndustry && matchesRating;
+      return matchesSearch && matchesCategory && matchesRating;
     });
-  }, [searchQuery, category, industry, rating]);
+  }, [searchQuery, category, rating]);
 
   const totalPages = Math.ceil(filteredAgents.length / AGENTS_PER_PAGE);
-  const currentAgents = filteredAgents.slice(
-    (currentPage - 1) * AGENTS_PER_PAGE,
-    currentPage * AGENTS_PER_PAGE
-  );
+  
+  const currentAgents = useMemo(() => {
+    return filteredAgents.slice(
+      (currentPage - 1) * AGENTS_PER_PAGE,
+      currentPage * AGENTS_PER_PAGE
+    );
+  }, [filteredAgents, currentPage]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
-  };
+  }, []);
   
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       window.scrollTo(0, 0);
     }
-  };
+  }, [totalPages]);
 
 
   return (
@@ -68,7 +69,7 @@ export default function MarketplacePage() {
 
         <section className="mb-12">
           <div className="bg-background p-6 rounded-lg shadow-md">
-            <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+            <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
               <div className="lg:col-span-2 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input 
@@ -100,7 +101,6 @@ export default function MarketplacePage() {
                   <SelectItem value="3">3 stars & up</SelectItem>
                 </SelectContent>
               </Select>
-              <Button type="submit" className="h-12 w-full">Search</Button>
             </form>
           </div>
         </section>

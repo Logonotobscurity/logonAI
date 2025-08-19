@@ -8,12 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { MarketplaceProduct } from "@/lib/types";
 import { MessageCircle, Star } from "lucide-react";
 import Link from "next/link";
+import React from "react";
 
 interface AgentCardProps {
   agent: MarketplaceProduct;
 }
 
-export function AgentCard({ agent }: AgentCardProps) {
+export const AgentCard = React.memo(function AgentCard({ agent }: AgentCardProps) {
   return (
     <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
        <CardHeader className="p-6 flex-row gap-4 items-center">
@@ -52,4 +53,4 @@ export function AgentCard({ agent }: AgentCardProps) {
       </div>
     </Card>
   );
-}
+});
