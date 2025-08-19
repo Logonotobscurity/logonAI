@@ -85,7 +85,7 @@ export function useVoice() {
   const speak = async (text: string) => {
     setVoiceState('thinking');
     try {
-      const response = await textToSpeech(text);
+      const response = await textToSpeech({ text });
       if (response.media && audioRef.current) {
         audioRef.current.src = response.media;
         audioRef.current.play();

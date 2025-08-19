@@ -1,5 +1,7 @@
 
 import type { LucideIcon } from "lucide-react";
+import { z } from 'genkit';
+
 
 export interface Agent {
   id: string;
@@ -87,3 +89,13 @@ export interface MarketplaceCategory {
   value: string;
   label: string;
 }
+
+export const TextToSpeechInputSchema = z.object({
+  text: z.string(),
+});
+export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
+
+export const TextToSpeechOutputSchema = z.object({
+  media: z.string().describe("The base64 encoded WAV audio data URI."),
+});
+export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
