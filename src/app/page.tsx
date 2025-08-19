@@ -1,11 +1,17 @@
+
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb, Lock, Scaling, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
 import { agents } from "@/lib/mock-data";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 const capabilities = [
   {
@@ -77,6 +83,17 @@ const assessments = [
 
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  const handleStartConversation = () => {
+    const params = new URLSearchParams();
+    if(query) {
+      params.set('q', query);
+    }
+    router.push(`/conversation?${params.toString()}`);
+  }
+
   return (
     <div className="flex flex-col">
       <section className="relative bg-background dark:bg-gray-900 w-full">
@@ -93,12 +110,15 @@ export default function Home() {
                 type="text"
                 placeholder="Describe your business challenge..."
                 className="h-16 rounded-full border-2 pl-8 pr-32 text-lg shadow-lg"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleStartConversation()}
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 transform flex items-center gap-2">
-                <Button type="submit" variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
+                <Button onClick={handleStartConversation} type="submit" variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
                   <Mic className="h-6 w-6" />
                 </Button>
-                 <Button type="submit" size="icon" className="rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
+                 <Button onClick={handleStartConversation} type="submit" size="icon" className="rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
                   <ArrowRight className="h-6 w-6" />
                 </Button>
               </div>

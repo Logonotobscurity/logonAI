@@ -1,3 +1,4 @@
+
 export interface Agent {
   id: string;
   name: string;
@@ -35,4 +36,5 @@ export interface Message {
   sender: 'user' | 'ai';
   text: string;
   timestamp: string;
+  isThinking?: boolean;
 }
