@@ -51,27 +51,28 @@ export default function ConversationPage() {
         
         setInput('');
         const newUserMessage: Message = {
-            id: String(messages.length + 1),
+            id: `${Date.now()}-user`,
             sender: 'user',
             text: text,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
-        setMessages(prev => [...prev, newUserMessage]);
         
+        const aiThinkingMessageId = `${Date.now()}-ai-thinking`;
         const aiThinkingMessage: Message = {
-            id: String(messages.length + 2),
+            id: aiThinkingMessageId,
             sender: 'ai',
             text: 'Analyzing...',
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             isThinking: true,
         };
-        setMessages(prev => [...prev, aiThinkingMessage]);
+
+        setMessages(prev => [...prev, newUserMessage, aiThinkingMessage]);
 
         try {
             const { agentSuggestions, reasoning } = await aiDrivenMatching({ userInput: text });
-
+            
             const aiResponseMessage: Message = {
-                id: String(messages.length + 2),
+                id: aiThinkingMessageId, // Use the same ID to replace the "thinking" message
                 sender: 'ai',
                 text: reasoning,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -89,7 +90,7 @@ export default function ConversationPage() {
         } catch (error) {
             console.error(error);
             const errorResponse: Message = {
-                 id: String(messages.length + 2),
+                 id: aiThinkingMessageId, // Use the same ID to replace the "thinking" message
                 sender: 'ai',
                 text: 'Sorry, I encountered an error. Please try again.',
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
