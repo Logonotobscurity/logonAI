@@ -379,5 +379,3 @@ export const capabilities: Capability[] = [
     description: "Voice to workflow: capture, validate, publish.",
   },
 ];
-
-    

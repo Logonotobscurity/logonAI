@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +19,7 @@ export const AgentCard = React.memo(function AgentCard({ agent }: AgentCardProps
     <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
        <CardHeader className="p-6 flex-row gap-4 items-center">
         <Avatar className="w-16 h-16 border">
+            <AvatarImage src={agent.avatar} alt={agent.name} />
             <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div>

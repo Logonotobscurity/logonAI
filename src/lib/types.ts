@@ -9,12 +9,12 @@ export interface MarketplaceProduct {
   description: string;
   category: string;
   industry?: string;
-  avatar: string; // was imageUrl, mapping to avatar
+  avatar: string;
   tags: string[];
   isTrending?: boolean;
-  specialty: string; // for compatibility
-  rating: number; // for compatibility
-  reviewCount: number; // for compatibility
+  specialty: string;
+  rating: number;
+  reviewCount: number;
 }
 
 export interface Question {
@@ -81,6 +81,11 @@ export interface MarketplaceCategory {
   value: string;
   label: string;
 }
+
+export const JoinWaitlistInputSchema = z.object({
+  email: z.string().email(),
+});
+export type JoinWaitlistInput = z.infer<typeof JoinWaitlistInputSchema>;
 
 export const TextToSpeechInputSchema = z.object({
   text: z.string(),
