@@ -91,3 +91,8 @@ export const TextToSpeechOutputSchema = z.object({
   media: z.string().describe("The base64 encoded WAV audio data URI."),
 });
 export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
+
+export const JoinWaitlistInputSchema = z.object({
+  email: z.string().email().describe('The email address of the user joining the waitlist.'),
+});
+export type JoinWaitlistInput = z.infer<typeof JoinWaitlistInputSchema>;

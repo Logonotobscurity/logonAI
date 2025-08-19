@@ -6,6 +6,7 @@ import { Logo } from "./logo";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { WaitlistDialog } from "./waitlist-dialog";
 
 const navLinks = [
   { title: "Features", href: "/#features" },
@@ -16,8 +17,10 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-4 hidden md:flex">
@@ -44,7 +47,7 @@ export default function Header() {
             </Link>
           </div>
           <nav className="hidden md:flex">
-            <Button>Join Waitlist</Button>
+             <Button onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</Button>
           </nav>
           <button
             className="md:hidden"
@@ -73,10 +76,12 @@ export default function Header() {
                 {link.title}
               </Link>
             ))}
-            <Button onClick={() => setIsMenuOpen(false)}>Join Waitlist</Button>
+            <Button onClick={() => { setIsMenuOpen(false); setIsWaitlistOpen(true); }}>Join Waitlist</Button>
           </div>
         </div>
       )}
     </header>
+    <WaitlistDialog open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen} />
+    </>
   );
 }

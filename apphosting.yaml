@@ -4,4 +4,13 @@
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
-  maxInstances: 1
+  cpu: 1
+  maxInstances: 2
+  concurrency: 100
+
+# Increase this value if you'd like to automatically spin up
+# more instances in response to increased traffic.
+# Managed backends can take up to 5 minutes to deploy.
+# If you're using a CI/CD system, it's recommended to increase this
+# value to at least 20 minutes to prevent your deployment from timing out.
+deploymentTimeoutSeconds: 1200
