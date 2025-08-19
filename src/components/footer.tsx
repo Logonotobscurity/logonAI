@@ -44,8 +44,8 @@ export default function Footer() {
 
         <div className="mt-12">
             <div className="flex items-center justify-center flex-wrap gap-4 md:justify-start">
-                {footerLinks.map((link) => (
-                    <Link key={link.href} href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                {footerLinks.map((link, index) => (
+                    <Link key={`${link.title}-${index}`} href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                         {link.title}
                     </Link>
                 ))}
