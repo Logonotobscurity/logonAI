@@ -4,16 +4,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/lib/types";
-import { Bot, FileText, Briefcase, Mic, Sparkles } from "lucide-react";
+import { Bot, FileText, Briefcase, Mic, Sparkles, Send, Upload } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import { useVoice } from "@/hooks/use-voice";
 import { aiDrivenMatching } from "@/ai/flows/ai-driven-matching";
 import Link from "next/link";
-import { marketplaceProducts } from "@/lib/mock-data.tsx";
+import { agents } from "@/lib/mock-data.tsx";
 
 
 export default function ConversationPage() {
@@ -23,6 +24,7 @@ export default function ConversationPage() {
     const { transcript, isListening, isSpeaking, voiceState, startListening, stopListening, speak } = useVoice();
     
     const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState('');
     const [suggestedAgents, setSuggestedAgents] = useState<any[]>([]);
     const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -34,17 +36,20 @@ export default function ConversationPage() {
         if (initialQuery) {
           handleSend(initialQuery);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialQuery]);
     
     useEffect(() => {
         if (transcript && !isListening) {
             handleSend(transcript);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transcript, isListening]);
 
     const handleSend = async (text: string) => {
         if (text.trim() === '') return;
         
+        setInput('');
         const newUserMessage: Message = {
             id: String(messages.length + 1),
             sender: 'user',
@@ -53,7 +58,6 @@ export default function ConversationPage() {
         };
         setMessages(prev => [...prev, newUserMessage]);
         
-        // Mock AI thinking
         const aiThinkingMessage: Message = {
             id: String(messages.length + 2),
             sender: 'ai',
@@ -73,14 +77,12 @@ export default function ConversationPage() {
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             
-            // Replace "Analyzing..." with the actual response
             setMessages(prev => prev.map(m => m.id === aiResponseMessage.id ? aiResponseMessage : m));
 
-            // Speak the response
             speak(reasoning);
             
             if (agentSuggestions.length > 0) {
-              const suggestedProducts = marketplaceProducts.filter(p => agentSuggestions.includes(p.id));
+              const suggestedProducts = agents.filter(p => agentSuggestions.includes(p.id));
               setSuggestedAgents(suggestedProducts);
             }
 
@@ -127,7 +129,7 @@ export default function ConversationPage() {
                             </div>
                         </CardHeader>
                         <CardContent className="p-0 flex-grow">
-                             <ScrollArea className="h-[calc(100vh-22rem)] p-6">
+                             <ScrollArea className="h-[calc(100vh-25rem)] p-6">
                                 <div className="space-y-6">
                                     {messages.map(message => (
                                         <div key={message.id} className={cn("flex items-end gap-2", message.sender === 'user' ? 'justify-end' : 'justify-start')}>
@@ -149,15 +151,31 @@ export default function ConversationPage() {
                                 </div>
                             </ScrollArea>
                         </CardContent>
-                        <div className="p-4 border-t flex justify-center items-center">
-                            <Button
-                                size="icon"
-                                className="h-16 w-16 rounded-full"
-                                onClick={isListening ? stopListening : startListening}
-                                disabled={isSpeaking || voiceState === 'thinking'}
-                            >
-                                {getMicIcon()}
-                            </Button>
+                        <div className="p-4 border-t">
+                            <div className="relative">
+                                <Input 
+                                    placeholder="Type your message or upload a file..." 
+                                    className="h-12 pr-24"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSend(input)}
+                                />
+                                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                     <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        className="h-10 w-10 voice-widget"
+                                        onClick={isListening ? stopListening : startListening}
+                                        disabled={isSpeaking || voiceState === 'thinking'}
+                                        data-state={voiceState}
+                                    >
+                                        {getMicIcon()}
+                                    </Button>
+                                    <Button size="icon" className="h-10 w-10" onClick={() => handleSend(input)} disabled={!input}>
+                                        <Send className="h-5 w-5"/>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     </Card>
                 </div>
@@ -165,7 +183,7 @@ export default function ConversationPage() {
                     <Card className="h-full">
                         <CardHeader>
                             <CardTitle className="font-headline">Context Sidebar</CardTitle>
-                            <CardDescription>Relevant assessments and marketplace links.</CardDescription>
+                            <CardDescription>Relevant assessments and suggested agents.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div>
@@ -183,10 +201,10 @@ export default function ConversationPage() {
                                 <h3 className="font-semibold mb-2 flex items-center gap-2"><Briefcase className="h-5 w-5"/> Suggested Agents</h3>
                                 {suggestedAgents.length > 0 ? (
                                 <ul className="space-y-2">
-                                     {suggestedAgents.map((product) => (
-                                     <li key={product.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                                        <span className="truncate">{product.name}</span>
-                                        <Link href={`/product/${product.id}`}>
+                                     {suggestedAgents.map((agent) => (
+                                     <li key={agent.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                        <span className="truncate">{agent.name}</span>
+                                        <Link href={`/agent/${agent.id}`}>
                                             <Button variant="outline" size="sm">View</Button>
                                         </Link>
                                     </li>

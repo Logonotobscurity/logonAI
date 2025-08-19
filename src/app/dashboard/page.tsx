@@ -17,15 +17,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon } from "lucide-react";
+import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { quickActions, activityFeed, suggestedAgents, marketplaceProducts } from "@/lib/mock-data.tsx";
-import { ProductCard } from "@/components/product-card";
+import { quickActions, activityFeed, agents } from "@/lib/mock-data.tsx";
+import { AgentCard } from "@/components/agent-card";
 
 
 export default function DashboardPage() {
-  const featuredProducts = marketplaceProducts.slice(0,2);
+  const featuredAgents = agents.slice(0,2);
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-secondary/30">
@@ -46,6 +46,9 @@ export default function DashboardPage() {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <Link href="/marketplace" className="w-full"><SidebarMenuButton><Users />Marketplace</SidebarMenuButton></Link>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <Link href="/modeler" className="w-full"><SidebarMenuButton><Workflow />Modeler</SidebarMenuButton></Link>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <Link href="/conversation" className="w-full"><SidebarMenuButton><MessageCircle />Conversations</SidebarMenuButton></Link>
@@ -143,8 +146,8 @@ export default function DashboardPage() {
                                     <CardDescription>Based on your recent activity.</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
-                                  {featuredProducts.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
+                                  {featuredAgents.map((agent) => (
+                                    <AgentCard key={agent.id} agent={agent} />
                                   ))}
                                 </CardContent>
                             </Card>

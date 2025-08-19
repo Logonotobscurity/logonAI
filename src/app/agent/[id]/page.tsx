@@ -1,59 +1,51 @@
-// This file is no longer needed and can be deleted. I am leaving it for now but it will be removed in a future step.
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { marketplaceProducts, reviews } from "@/lib/mock-data.tsx";
+import { agents, reviews } from "@/lib/mock-data.tsx";
 import { MessageCircle, Star, TrendingUp } from "lucide-react";
 import { notFound } from "next/navigation";
 import Image from 'next/image';
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = marketplaceProducts.find((p) => p.id === params.id);
+export default function AgentDetailPage({ params }: { params: { id: string } }) {
+  const agent = agents.find((p) => p.id === params.id);
 
-  if (!product) {
+  if (!agent) {
     notFound();
   }
 
-  // Mock reviews for now
-  const productReviews = reviews.filter((r) => r.agentId === '1').slice(0,2);
-  const rating = 4.8;
-  const reviewCount = 132;
-
+  const agentReviews = reviews.filter((r) => r.agentId === agent.id).slice(0,3);
+  
   return (
     <div className="bg-background">
       <div className="container mx-auto max-w-5xl py-12 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
             <Card className="sticky top-24 overflow-hidden">
-                <div className="relative h-64 w-full">
-                    <Image
-                        src={product.imageUrl}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                        data-ai-hint="automation solution"
-                    />
-                     {product.isTrending && (
-                        <Badge className="absolute top-2 right-2" variant="destructive"><TrendingUp className="mr-1 h-4 w-4"/>Trending</Badge>
-                    )}
-                </div>
-              <CardContent className="p-6">
-                <p className="text-sm font-semibold text-primary mb-1 capitalize">{product.category.replace(/-/g, ' ')}</p>
-                <h1 className="text-3xl font-bold font-headline">{product.name}</h1>
-                <div className="flex items-center gap-1 mt-3 text-yellow-500">
+              <CardHeader className="p-6 items-center text-center">
+                 <Avatar className="w-32 h-32 border-4 border-primary/20 mb-4">
+                    <AvatarImage src={agent.avatar} alt={agent.name} />
+                    <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <CardTitle className="font-headline text-3xl">{agent.name}</CardTitle>
+                <p className="text-lg font-semibold text-primary">{agent.specialty}</p>
+              </CardHeader>
+              <CardContent className="p-6 pt-0">
+                <div className="flex justify-center items-center gap-1 mt-3 text-yellow-500">
                     <Star className="w-5 h-5 fill-current" />
-                    <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
-                    <span className="text-sm text-muted-foreground">({reviewCount} reviews)</span>
+                    <span className="text-lg font-bold text-foreground">{agent.rating.toFixed(1)}</span>
+                    <span className="text-sm text-muted-foreground">({agent.reviewCount} reviews)</span>
                 </div>
                 <Separator className="my-6" />
-                <div className="flex flex-wrap gap-2">
-                    {product.tags.map((tag) => (
+                <div className="flex flex-wrap gap-2 justify-center">
+                    {agent.tags.map((tag) => (
                         <Badge key={tag} variant="secondary">{tag}</Badge>
                     ))}
                 </div>
                 <Button size="lg" className="w-full mt-6">
-                    Activate Solution <MessageCircle className="ml-2 h-5 w-5" />
+                    Start Conversation <MessageCircle className="ml-2 h-5 w-5" />
                 </Button>
               </CardContent>
             </Card>
@@ -61,10 +53,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           <div className="md:col-span-2">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline text-2xl">About {product.name}</CardTitle>
+                    <CardTitle className="font-headline text-2xl">About {agent.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-lg text-muted-foreground font-body">{product.description}</p>
+                    <p className="text-lg text-muted-foreground font-body">{agent.description}</p>
                 </CardContent>
             </Card>
 
@@ -74,8 +66,11 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-6">
-                        {productReviews.length > 0 ? productReviews.map(review => (
+                        {agentReviews.length > 0 ? agentReviews.map(review => (
                             <div key={review.id} className="flex gap-4">
+                                <Avatar>
+                                    <AvatarFallback>{review.author.charAt(0)}</AvatarFallback>
+                                </Avatar>
                                 <div>
                                     <div className="flex items-center gap-2 mb-1">
                                         <p className="font-semibold">{review.author}</p>
@@ -91,7 +86,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                                     <p className="text-muted-foreground font-body">{review.comment}</p>
                                 </div>
                             </div>
-                        )) : <p className="text-muted-foreground">No reviews yet.</p>}
+                        )) : <p className="text-muted-foreground">No reviews yet for this agent.</p>}
                     </div>
                 </CardContent>
             </Card>
@@ -101,6 +96,3 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     </div>
   );
 }
-
-// Create a new route file at src/app/product/[id]/page.tsx
-// I will need to create this new file. Let's do that now.

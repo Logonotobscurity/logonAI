@@ -21,11 +21,6 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: '/agent/:id',
-        destination: '/product/:id',
-        permanent: true,
-      },
     ]
   },
 };

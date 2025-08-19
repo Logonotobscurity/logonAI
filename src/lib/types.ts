@@ -12,6 +12,7 @@ export interface Agent {
   rating: number;
   reviewCount: number;
   tags: string[];
+  isTrending?: boolean;
 }
 
 export interface Question {
@@ -72,17 +73,6 @@ export interface Capability {
     icon: React.ReactNode;
     title: string;
     description: string;
-}
-
-export interface MarketplaceProduct {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  industry?: string;
-  imageUrl: string;
-  tags: string[];
-  isTrending?: boolean;
 }
 
 export interface MarketplaceCategory {

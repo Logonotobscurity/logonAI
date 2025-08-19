@@ -4,11 +4,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb, Lock, Scaling, Rocket } from "lucide-react";
+import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb, Lock, Scaling, Rocket, Send } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ProductCard } from "@/components/product-card";
-import { marketplaceProducts, capabilities, assessments } from "@/lib/mock-data.tsx";
+import { AgentCard } from "@/components/agent-card";
+import { marketplaceProducts, capabilities, assessments, agents } from "@/lib/mock-data.tsx";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -25,6 +25,8 @@ export default function Home() {
     router.push(`/conversation?${params.toString()}`);
   }
 
+  const featuredAgents = agents.filter(a => a.isTrending).slice(0, 3);
+
   return (
     <div className="flex flex-col">
       <section className="relative bg-background dark:bg-gray-900 w-full">
@@ -37,22 +39,23 @@ export default function Home() {
               LOG_ON helps you assess, connect, and activate intelligent solutions instantly. Start a conversation with our AI to discover your path to growth.
             </p>
             <div className="relative mb-6 max-w-2xl mx-auto">
-              <Input
-                type="text"
-                placeholder="Describe your business challenge..."
-                className="h-16 rounded-full border-2 pl-8 pr-32 text-lg shadow-lg"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleStartConversation()}
-              />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 transform flex items-center gap-2">
-                <Button onClick={handleStartConversation} type="submit" variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
-                  <Mic className="h-6 w-6" />
-                </Button>
-                 <Button onClick={handleStartConversation} type="submit" size="icon" className="rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
-                  <ArrowRight className="h-6 w-6" />
-                </Button>
-              </div>
+                <Send className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                    type="text"
+                    placeholder="Describe your business challenge or upload a document..."
+                    className="h-16 rounded-full border-2 pl-14 pr-32 text-lg shadow-lg"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleStartConversation()}
+                />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 transform flex items-center gap-2">
+                    <Button onClick={handleStartConversation} type="submit" variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
+                    <Mic className="h-6 w-6" />
+                    </Button>
+                    <Button onClick={handleStartConversation} type="submit" size="icon" className="rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
+                    <ArrowRight className="h-6 w-6" />
+                    </Button>
+                </div>
             </div>
             <p className="text-sm text-muted-foreground">Or, <Link href="/assessment" className="underline hover:text-primary">take an assessment</Link> to get started.</p>
         </div>
@@ -144,12 +147,12 @@ export default function Home() {
       <section id="marketplace" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Featured AI Solutions</h2>
-            <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Connect with top-tier solutions from our curated marketplace to bring your vision to life.</p>
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Featured AI Agents</h2>
+            <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Connect with top-tier experts from our curated marketplace to bring your vision to life.</p>
           </div>
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {marketplaceProducts.filter(p => p.isTrending).slice(0, 3).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {featuredAgents.map((agent) => (
+              <AgentCard key={agent.id} agent={agent} />
             ))}
           </div>
           <div className="text-center mt-12">

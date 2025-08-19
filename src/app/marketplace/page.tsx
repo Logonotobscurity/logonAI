@@ -1,9 +1,9 @@
 
-import { ProductCard } from "@/components/product-card";
+import { AgentCard } from "@/components/agent-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { marketplaceProducts, customMarketplaceCategories, industryCategories } from "@/lib/mock-data.tsx";
+import { agents, marketplaceCategories } from "@/lib/mock-data.tsx";
 import { Search } from "lucide-react";
 import {
   Pagination,
@@ -20,19 +20,19 @@ export default function MarketplacePage() {
     <div className="bg-secondary/30">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <section className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4">Marketplace</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4">Agent Marketplace</h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Find the perfect AI agent or solution to accelerate your business growth. Connect with vetted experts and activate intelligent solutions.
+            Find the perfect AI agent to accelerate your business growth. Connect with vetted experts and activate intelligent solutions.
           </p>
         </section>
 
         <section className="mb-12">
           <div className="bg-background p-6 rounded-lg shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-              <div className="md:col-span-2 lg:col-span-1">
+              <div className="md:col-span-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input placeholder="Find an AI agent or solution..." className="h-12 pl-10" />
+                  <Input placeholder="Find an AI agent..." className="h-12 pl-10" />
                 </div>
               </div>
               <div>
@@ -41,21 +41,21 @@ export default function MarketplacePage() {
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {customMarketplaceCategories.map(cat => (
+                    {marketplaceCategories.map(cat => (
                       <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-               <div>
+              <div>
                  <Select>
                   <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Industry" />
+                    <SelectValue placeholder="Rating" />
                   </SelectTrigger>
                   <SelectContent>
-                    {industryCategories.map(cat => (
-                      <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                    ))}
+                    <SelectItem value="5">5 stars</SelectItem>
+                    <SelectItem value="4">4 stars & up</SelectItem>
+                    <SelectItem value="3">3 stars & up</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -65,9 +65,9 @@ export default function MarketplacePage() {
         </section>
         
         <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {marketplaceProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+            {agents.map((agent) => (
+              <AgentCard key={agent.id} agent={agent} />
             ))}
           </div>
         </section>
@@ -103,4 +103,3 @@ export default function MarketplacePage() {
     </div>
   );
 }
-

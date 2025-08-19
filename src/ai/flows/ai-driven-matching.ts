@@ -11,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { agents } from '@/lib/mock-data';
 
 const AIDrivenMatchingInputSchema = z.object({
   userInput: z.string().describe('The user input from assessment or conversation.'),
@@ -20,7 +21,7 @@ export type AIDrivenMatchingInput = z.infer<typeof AIDrivenMatchingInputSchema>;
 const AIDrivenMatchingOutputSchema = z.object({
   agentSuggestions: z
     .array(z.string())
-    .describe('A list of suggested agent IDs based on the user input.'),
+    .describe('A list of suggested agent IDs based on the user input. Choose from available agents.'),
   reasoning: z.string().describe('The reasoning behind the agent suggestions.'),
 });
 export type AIDrivenMatchingOutput = z.infer<typeof AIDrivenMatchingOutputSchema>;
@@ -29,6 +30,17 @@ export async function aiDrivenMatching(input: AIDrivenMatchingInput): Promise<AI
   return aiDrivenMatchingFlow(input);
 }
 
+const availableAgentsPrompt = `
+Available Agents:
+${agents.map(agent => `
+- ID: ${agent.id}
+- Name: ${agent.name}
+- Specialty: ${agent.specialty}
+- Tags: ${agent.tags.join(', ')}
+- Description: ${agent.description}
+`).join('')}
+`;
+
 const prompt = ai.definePrompt({
   name: 'aiDrivenMatchingPrompt',
   input: {schema: AIDrivenMatchingInputSchema},
@@ -36,12 +48,13 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI assistant designed to match users with the best agents in the marketplace.
 
   Based on the user's input (either from their assessment or conversation), identify the key needs and preferences.
-  Then, suggest a list of agent IDs that would be a good fit, and explain your reasoning for each suggestion.
+  Then, suggest a list of agent IDs from the available agents that would be a good fit, and explain your reasoning for each suggestion.
 
   User Input: {{{userInput}}}
 
-  Ensure that the agentSuggestions field contains only a list of agent IDs.
-  Provide a clear and concise reasoning for each suggested agent, explaining why they are a good match for the user's needs.
+  ${availableAgentsPrompt}
+
+  Your task is to analyze the user input and the list of available agents. Return a list of agent IDs in the 'agentSuggestions' field that best match the user's needs. Also, provide a clear and concise reasoning for your suggestions in the 'reasoning' field.
 `,
 });
 
