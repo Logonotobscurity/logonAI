@@ -8,78 +8,9 @@ import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, 
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
-import { agents } from "@/lib/mock-data";
+import { agents, capabilities, assessments } from "@/lib/mock-data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-
-const capabilities = [
-  {
-    icon: <Lightbulb className="h-8 w-8 text-primary" />,
-    title: "Thinks Like Your Best Strategist",
-    description: "Our AI-driven platform analyzes your business needs to identify high-impact growth opportunities.",
-  },
-  {
-    icon: <Cpu className="h-8 w-8 text-primary" />,
-    title: "Spots Opportunities, Creates Solutions",
-    description: "From market gaps to internal inefficiencies, get tailored AI solutions and connect with experts.",
-  },
-  {
-    icon: <Rocket className="h-8 w-8 text-primary" />,
-    title: "Your Always-On Strategic Advisor",
-    description: "Leverage continuous, data-driven insights to make smarter decisions and stay ahead of the curve.",
-  },
-  {
-    icon: <Lock className="h-8 w-8 text-primary" />,
-    title: "Enterprise-class automation",
-    description: "Multi-agent orchestration, role isolation, audit logs.",
-  },
-  {
-    icon: <Scaling className="h-8 w-8 text-primary" />,
-    title: "Local pricing",
-    description: "Regionalised pricing so teams of any size can start now.",
-  },
-  {
-    icon: <Rocket className="h-8 w-8 text-primary" />,
-    title: "From idea → deploy",
-    description: "Voice to workflow: capture, validate, publish.",
-  },
-];
-
-const assessments = [
-  {
-    sectionLabel: 'Assessment',
-    title: 'AI Readiness Evaluator',
-    subheading: 'DIAGNOSTICS',
-    workflows: ['Department Analysis', 'Technology Stack Review', 'Implementation Roadmap'],
-    type: 'ai-readiness',
-    icon: <Cpu className="h-8 w-8 text-primary" />,
-  },
-  {
-    sectionLabel: 'Assessment',
-    title: 'Workflow Automation Audit',
-    subheading: 'OPTIMIZATION',
-    workflows: ['Bottleneck Identification', 'Workflow Streamlining', 'ROI Projection'],
-    type: 'workflow-automation',
-    icon: <Workflow className="h-8 w-8 text-primary" />,
-  },
-  {
-    sectionLabel: 'Assessment',
-    title: 'ROI Calculator',
-    subheading: 'INSIGHTS',
-    workflows: ['Investment Analysis', 'Savings Calculation', 'Payback Projection'],
-    type: 'roi-calculator',
-    icon: <AreaChart className="h-8 w-8 text-primary" />,
-  },
-  {
-    sectionLabel: 'Assessment',
-    title: 'Security & Compliance Checker',
-    subheading: 'GOVERNANCE',
-    workflows: ['Regulatory Compliance', 'Data Privacy Audit', 'Security Assessment'],
-    type: 'security-compliance',
-    icon: <ShieldCheck className="h-8 w-8 text-primary" />,
-  },
-];
 
 
 export default function Home() {
@@ -184,7 +115,7 @@ export default function Home() {
                       </CardHeader>
                       <CardContent className="flex-grow">
                         <ul className="space-y-2 mt-4">
-                            {assessment.workflows.map(flow => (
+                            {assessment.workflows && assessment.workflows.map(flow => (
                                 <li key={flow} className="flex items-center gap-2 text-muted-foreground">
                                     <ArrowRight className="h-4 w-4 text-primary/50" />
                                     <span>{flow}</span>

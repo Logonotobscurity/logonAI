@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -21,23 +22,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { quickActions, activityFeed, suggestedAgents } from "@/lib/mock-data";
 
-const quickActions = [
-    { title: "Resume Assessment", href: "/assessment" },
-    { title: "Browse Marketplace", href: "/marketplace" },
-    { title: "New Conversation", href: "/conversation" },
-];
-
-const activityFeed = [
-    { type: "Assessment", description: "You completed the 'AI Readiness' assessment.", time: "2 hours ago"},
-    { type: "Marketplace", description: "You viewed the profile of agent 'Aria Sterling'.", time: "1 day ago"},
-    { type: "Conversation", description: "New message from LOG_ON Assistant.", time: "3 days ago"},
-]
-
-const suggestedAgents = [
-    { id: '2', name: 'Kenji Tanaka', specialty: 'Machine Learning', avatar: 'https://placehold.co/40x40.png' },
-    { id: '3', name: 'Sofia Reyes', specialty: 'Data Visualization', avatar: 'https://placehold.co/40x40.png' }
-]
 
 export default function DashboardPage() {
   return (

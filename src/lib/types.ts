@@ -21,6 +21,11 @@ export interface Assessment {
     title: string;
     description: string;
     questions: Question[];
+    subheading?: string;
+    workflows?: string[];
+    type?: string;
+    icon?: React.ReactNode;
+    sectionLabel?: string;
 }
 
 export interface Review {
@@ -37,4 +42,28 @@ export interface Message {
   text: string;
   timestamp: string;
   isThinking?: boolean;
+}
+
+export interface QuickAction {
+    title: string;
+    href: string;
+}
+
+export interface Activity {
+    type: string;
+    description: string;
+    time: string;
+}
+
+export interface SuggestedAgent {
+    id: string;
+    name: string;
+    specialty: string;
+    avatar: string;
+}
+
+export interface Capability {
+    icon: React.ReactNode;
+    title: string;
+    description: string;
 }
