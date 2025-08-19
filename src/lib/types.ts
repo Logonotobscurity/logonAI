@@ -1,4 +1,6 @@
 
+import type { LucideIcon } from "lucide-react";
+
 export interface Agent {
   id: string;
   name: string;
@@ -47,12 +49,14 @@ export interface Message {
 export interface QuickAction {
     title: string;
     href: string;
+    icon: LucideIcon;
 }
 
 export interface Activity {
     type: string;
     description: string;
     time: string;
+    icon: LucideIcon;
 }
 
 export interface SuggestedAgent {

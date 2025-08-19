@@ -1,5 +1,6 @@
+
 import type { Agent, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceProduct, MarketplaceCategory } from './types';
-import { AreaChart, Cpu, Lightbulb, Lock, Rocket, Scaling, ShieldCheck, Workflow } from "lucide-react";
+import { AreaChart, Cpu, Lightbulb, Lock, Rocket, Scaling, ShieldCheck, Workflow, BarChart, Users, MessageCircle, FileText } from "lucide-react";
 
 
 export const agents: Agent[] = [
@@ -137,15 +138,15 @@ export const reviews: Review[] = [
 
 
 export const quickActions: QuickAction[] = [
-    { title: "Resume Assessment", href: "/assessment" },
-    { title: "Browse Marketplace", href: "/marketplace" },
-    { title: "New Conversation", href: "/conversation" },
+    { title: "New Assessment", href: "/assessment", icon: BarChart },
+    { title: "Browse Marketplace", href: "/marketplace", icon: Users },
+    { title: "New Conversation", href: "/conversation", icon: MessageCircle },
 ];
 
 export const activityFeed: Activity[] = [
-    { type: "Assessment", description: "You completed the 'AI Readiness' assessment.", time: "2 hours ago"},
-    { type: "Marketplace", description: "You viewed the profile of agent 'Aria Sterling'.", time: "1 day ago"},
-    { type: "Conversation", description: "New message from LOG_ON Assistant.", time: "3 days ago"},
+    { type: "Assessment", description: "You completed the 'AI Readiness' assessment.", time: "2 hours ago", icon: FileText},
+    { type: "Marketplace", description: "You viewed the profile of agent 'Aria Sterling'.", time: "1 day ago", icon: Users},
+    { type: "Conversation", description: "New message from LOG_ON Assistant.", time: "3 days ago", icon: MessageCircle},
 ]
 
 export const suggestedAgents: SuggestedAgent[] = [

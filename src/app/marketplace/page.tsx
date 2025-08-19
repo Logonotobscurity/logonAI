@@ -1,8 +1,9 @@
+
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { marketplaceProducts, customMarketplaceCategories, industryCategories } from "@/lib/mock-data";
+import { marketplaceProducts, customMarketplaceCategories, industryCategories } from "@/lib/mock-data.tsx";
 import { Search } from "lucide-react";
 import {
   Pagination,
@@ -27,14 +28,14 @@ export default function MarketplacePage() {
 
         <section className="mb-12">
           <div className="bg-background p-6 rounded-lg shadow-md">
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-              <div className="md:col-span-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+              <div className="md:col-span-2 lg:col-span-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input placeholder="Find an AI agent or solution..." className="h-12 pl-10" />
                 </div>
               </div>
-              <div className="md:col-span-1">
+              <div>
                  <Select>
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Category" />
@@ -46,7 +47,7 @@ export default function MarketplacePage() {
                   </SelectContent>
                 </Select>
               </div>
-               <div className="md:col-span-1">
+               <div>
                  <Select>
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Industry" />
@@ -58,13 +59,13 @@ export default function MarketplacePage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button className="h-12 md:col-span-1">Search</Button>
+              <Button className="h-12 w-full">Search</Button>
             </div>
           </div>
         </section>
         
         <section>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {marketplaceProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -102,3 +103,4 @@ export default function MarketplacePage() {
     </div>
   );
 }
+

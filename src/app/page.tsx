@@ -147,7 +147,7 @@ export default function Home() {
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Featured AI Solutions</h2>
             <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Connect with top-tier solutions from our curated marketplace to bring your vision to life.</p>
           </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {marketplaceProducts.filter(p => p.isTrending).slice(0, 3).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

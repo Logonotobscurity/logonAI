@@ -12,20 +12,20 @@ import {
   SidebarProvider,
   SidebarTrigger,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { quickActions, activityFeed, suggestedAgents } from "@/lib/mock-data";
+import { quickActions, activityFeed, suggestedAgents, marketplaceProducts } from "@/lib/mock-data.tsx";
+import { ProductCard } from "@/components/product-card";
 
 
 export default function DashboardPage() {
+  const featuredProducts = marketplaceProducts.slice(0,2);
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-secondary/30">
@@ -71,11 +71,11 @@ export default function DashboardPage() {
                     <h1 className="text-xl font-semibold font-headline">Dashboard</h1>
                 </div>
                  <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" aria-label="Search">
                         <Search className="h-5 w-5" />
                         <span className="sr-only">Search</span>
                     </Button>
-                     <Button variant="ghost" size="icon">
+                     <Button variant="ghost" size="icon" aria-label="Notifications">
                         <Bell className="h-5 w-5" />
                         <span className="sr-only">Notifications</span>
                     </Button>
@@ -92,14 +92,17 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid gap-8 lg:grid-cols-3">
-                    <div className="lg:col-span-2">
-                        <section className="mb-8">
+                    <div className="lg:col-span-2 space-y-8">
+                        <section>
                             <h3 className="text-xl font-semibold font-headline mb-4">Quick Actions</h3>
-                            <div className="grid gap-4 sm:grid-cols-3">
+                            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                                 {quickActions.map(action => (
-                                     <Link href={action.href} key={action.title}>
-                                        <Card className="hover:bg-muted/50 transition-colors">
-                                            <CardContent className="p-6">
+                                     <Link href={action.href} key={action.title} className="block">
+                                        <Card className="hover:bg-muted/50 transition-colors h-full">
+                                            <CardContent className="p-6 flex flex-col items-center text-center">
+                                                <div className="p-3 bg-primary/10 rounded-full mb-2">
+                                                    <action.icon className="h-6 w-6 text-primary"/>
+                                                </div>
                                                 <p className="font-semibold">{action.title}</p>
                                             </CardContent>
                                         </Card>
@@ -114,12 +117,17 @@ export default function DashboardPage() {
                                 <CardContent className="p-0">
                                     <ul className="divide-y">
                                         {activityFeed.map((activity, index) => (
-                                            <li key={index} className="p-4 flex justify-between items-center">
-                                                <div>
-                                                    <Badge variant={activity.type === "Assessment" ? "default" : "secondary"} className="mb-1">{activity.type}</Badge>
+                                            <li key={index} className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                                <div className="flex items-center gap-3">
+                                                  <div className={`p-2 rounded-full bg-${activity.type === 'Assessment' ? 'primary' : 'secondary'}/10`}>
+                                                    <activity.icon className={`h-5 w-5 text-${activity.type === 'Assessment' ? 'primary' : 'secondary-foreground'}`}/>
+                                                  </div>
+                                                  <div>
                                                     <p>{activity.description}</p>
+                                                    <p className="text-sm text-muted-foreground">{activity.time}</p>
+                                                  </div>
                                                 </div>
-                                                <p className="text-sm text-muted-foreground">{activity.time}</p>
+                                                <Button variant="ghost" size="sm"><LinkIcon className="h-4 w-4 mr-2"/>View</Button>
                                             </li>
                                         ))}
                                     </ul>
@@ -129,30 +137,15 @@ export default function DashboardPage() {
                     </div>
                     <div className="lg:col-span-1">
                         <section>
-                            <h3 className="text-xl font-semibold font-headline mb-4">Suggested For You</h3>
-                            <Card>
+                            <Card className="bg-background">
                                 <CardHeader>
-                                    <CardTitle className="text-lg">AI Agents</CardTitle>
+                                    <CardTitle className="text-xl font-headline">Suggested For You</CardTitle>
                                     <CardDescription>Based on your recent activity.</CardDescription>
                                 </CardHeader>
-                                <CardContent>
-                                    <ul className="space-y-4">
-                                        {suggestedAgents.map(agent => (
-                                            <li key={agent.id} className="flex items-center gap-4">
-                                                <Avatar>
-                                                    <AvatarImage src={agent.avatar} alt={agent.name}/>
-                                                    <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
-                                                </Avatar>
-                                                <div className="flex-1">
-                                                    <p className="font-semibold">{agent.name}</p>
-                                                    <p className="text-sm text-muted-foreground">{agent.specialty}</p>
-                                                </div>
-                                                <Link href={`/agent/${agent.id}`} passHref>
-                                                  <Button variant="outline" size="sm">View</Button>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                <CardContent className="space-y-4">
+                                  {featuredProducts.map((product) => (
+                                    <ProductCard key={product.id} product={product} />
+                                  ))}
                                 </CardContent>
                             </Card>
                         </section>
