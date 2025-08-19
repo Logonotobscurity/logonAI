@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb } from "lucide-react";
+import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb, Lock, Scaling, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
@@ -9,19 +9,19 @@ import { agents } from "@/lib/mock-data";
 
 const capabilities = [
   {
-    icon: <Lightbulb className="h-8 w-8 text-primary" />,
-    title: "Thinks Like Your Best Strategist",
-    description: "Our intelligent engine connects you with the perfect AI agents and solutions based on your unique needs.",
+    icon: <Lock className="h-8 w-8 text-primary" />,
+    title: "Enterprise-class automation",
+    description: "Multi-agent orchestration, role isolation, audit logs.",
   },
   {
-    icon: <BarChart className="h-8 w-8 text-primary" />,
-    title: "Spots Opportunities, Creates Solutions",
-    description: "Take our comprehensive assessments to pinpoint your business challenges and growth opportunities.",
+    icon: <Scaling className="h-8 w-8 text-primary" />,
+    title: "Local pricing",
+    description: "Regionalised pricing so teams of any size can start now.",
   },
   {
-    icon: <Bot className="h-8 w-8 text-primary" />,
-    title: "Your Always-On Strategic Advisor",
-    description: "Explore a marketplace of vetted AI professionals and vendors, ready to activate your solutions.",
+    icon: <Rocket className="h-8 w-8 text-primary" />,
+    title: "From idea → deploy",
+    description: "Voice to workflow: capture, validate, publish.",
   },
 ];
 
@@ -95,7 +95,7 @@ export default function Home() {
       <section id="features" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Our Capabilities</h2>
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Build Smarter, Sell Faster, Support Instantly</h2>
             <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">A platform designed to translate your challenges into actionable, AI-driven solutions.</p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -110,6 +110,13 @@ export default function Home() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+           <div className="text-center mt-12">
+            <Link href="/assessment">
+              <Button size="lg">
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
