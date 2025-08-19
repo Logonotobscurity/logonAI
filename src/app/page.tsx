@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Bot, BarChart, Users, Cpu, Mic, FileText, Briefcase, Star, Search, Workflow, ShieldCheck, AreaChart, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
@@ -10,57 +9,54 @@ import { agents } from "@/lib/mock-data";
 
 const capabilities = [
   {
-    icon: <Bot className="h-8 w-8 text-primary" />,
-    title: "AI-Powered Matching",
+    icon: <Lightbulb className="h-8 w-8 text-primary" />,
+    title: "Thinks Like Your Best Strategist",
     description: "Our intelligent engine connects you with the perfect AI agents and solutions based on your unique needs.",
   },
   {
     icon: <BarChart className="h-8 w-8 text-primary" />,
-    title: "In-Depth Assessments",
+    title: "Spots Opportunities, Creates Solutions",
     description: "Take our comprehensive assessments to pinpoint your business challenges and growth opportunities.",
   },
   {
-    icon: <Users className="h-8 w-8 text-primary" />,
-    title: "Curated Marketplace",
+    icon: <Bot className="h-8 w-8 text-primary" />,
+    title: "Your Always-On Strategic Advisor",
     description: "Explore a marketplace of vetted AI professionals and vendors, ready to activate your solutions.",
-  },
-  {
-    icon: <Cpu className="h-8 w-8 text-primary" />,
-    title: "Intelligent Solutions",
-    description: "Activate pre-built or custom AI solutions to automate tasks, gain insights, and drive efficiency.",
-  },
-  {
-    icon: <FileText className="h-8 w-8 text-primary" />,
-    title: "Seamless Conversations",
-    description: "Engage with our AI assistant or connect directly with agents through an intuitive chat interface.",
-  },
-  {
-    icon: <Briefcase className="h-8 w-8 text-primary" />,
-    title: "Actionable Insights",
-    description: "Receive data-driven recommendations and track your progress towards your business goals.",
   },
 ];
 
 const assessments = [
   {
-    title: "Digital Maturity Assessment",
-    tagline: "Benchmark your digital capabilities against industry leaders.",
-    cta: "Start Assessment",
+    sectionLabel: 'Assessment',
+    title: 'AI Readiness Evaluator',
+    subheading: 'DIAGNOSTICS',
+    workflows: ['Department Analysis', 'Technology Stack Review', 'Implementation Roadmap'],
+    type: 'ai-readiness',
+    icon: <Cpu className="h-8 w-8 text-primary" />,
   },
   {
-    title: "AI Readiness Assessment",
-    tagline: "Evaluate your organization's readiness for AI integration.",
-    cta: "Start Assessment",
+    sectionLabel: 'Assessment',
+    title: 'Workflow Automation Audit',
+    subheading: 'OPTIMIZATION',
+    workflows: ['Bottleneck Identification', 'Workflow Streamlining', 'ROI Projection'],
+    type: 'workflow-automation',
+    icon: <Workflow className="h-8 w-8 text-primary" />,
   },
   {
-    title: "Growth Opportunity Finder",
-    tagline: "Uncover new avenues for expansion and innovation.",
-    cta: "Start Assessment",
+    sectionLabel: 'Assessment',
+    title: 'ROI Calculator',
+    subheading: 'INSIGHTS',
+    workflows: ['Investment Analysis', 'Savings Calculation', 'Payback Projection'],
+    type: 'roi-calculator',
+    icon: <AreaChart className="h-8 w-8 text-primary" />,
   },
   {
-    title: "Process Automation Audit",
-    tagline: "Identify key processes ripe for AI-powered automation.",
-    cta: "Start Assessment",
+    sectionLabel: 'Assessment',
+    title: 'Security & Compliance Checker',
+    subheading: 'GOVERNANCE',
+    workflows: ['Regulatory Compliance', 'Data Privacy Audit', 'Security Assessment'],
+    type: 'security-compliance',
+    icon: <ShieldCheck className="h-8 w-8 text-primary" />,
   },
 ];
 
@@ -68,40 +64,31 @@ const assessments = [
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <section className="bg-background dark:bg-gray-900">
-        <div className="container mx-auto grid max-w-screen-xl px-4 py-8 lg:grid-cols-12 lg:gap-8 lg:py-16 xl:gap-0">
-          <div className="mr-auto place-self-center lg:col-span-7">
-            <h1 className="mb-4 max-w-2xl font-headline text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl dark:text-white">
-              Identify your next growth opportunity with AI.
+      <section className="relative bg-background dark:bg-gray-900 w-full">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
+        <div className="container mx-auto max-w-screen-xl px-4 py-20 lg:py-32 text-center">
+            <h1 className="mb-4 font-headline text-5xl font-extrabold leading-tight tracking-tighter md:text-6xl xl:text-7xl">
+              Identify Your Next Growth Opportunity with AI.
             </h1>
-            <p className="mb-6 max-w-2xl font-body text-lg text-muted-foreground lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+            <p className="mb-8 max-w-3xl mx-auto font-body text-lg text-muted-foreground md:text-xl lg:text-2xl">
               LOG_ON helps you assess, connect, and activate intelligent solutions instantly. Start a conversation with our AI to discover your path to growth.
             </p>
-            <div className="relative mb-6 max-w-md">
+            <div className="relative mb-6 max-w-2xl mx-auto">
               <Input
                 type="text"
                 placeholder="Describe your business challenge..."
-                className="h-14 rounded-full border-2 pl-6 pr-24 text-lg"
+                className="h-16 rounded-full border-2 pl-8 pr-32 text-lg shadow-lg"
               />
-              <Button type="submit" variant="ghost" size="icon" className="absolute right-16 top-1/2 -translate-y-1/2 transform rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
-                <Mic className="h-6 w-6" />
-              </Button>
-               <Button type="submit" variant="ghost" size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 transform rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
-                <ArrowRight className="h-6 w-6" />
-              </Button>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 transform flex items-center gap-2">
+                <Button type="submit" variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
+                  <Mic className="h-6 w-6" />
+                </Button>
+                 <Button type="submit" size="icon" className="rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
+                  <ArrowRight className="h-6 w-6" />
+                </Button>
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">Or, <Link href="/assessment" className="underline hover:text-primary">take an assessment</Link> to get started.</p>
-          </div>
-          <div className="hidden lg:col-span-5 lg:mt-0 lg:flex">
-            <Image
-              src="https://placehold.co/600x600.png"
-              alt="AI Assistant"
-              width={600}
-              height={600}
-              className="rounded-full object-cover shadow-2xl"
-              data-ai-hint="AI assistant abstract"
-            />
-          </div>
         </div>
       </section>
 
@@ -136,26 +123,40 @@ export default function Home() {
           <Carousel
             opts={{
               align: "start",
-              loop: true,
             }}
             className="w-full"
           >
             <CarouselContent>
               {assessments.map((assessment, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1">
-                    <Card className="h-full flex flex-col justify-between">
+                  <div className="p-1 h-full">
+                    <Card className="h-full flex flex-col justify-between text-left">
                       <CardHeader>
-                        <CardTitle className="font-headline">{assessment.title}</CardTitle>
-                        <CardDescription className="font-body">{assessment.tagline}</CardDescription>
+                        <div className="flex items-start justify-between">
+                            <div>
+                                <p className="text-sm font-semibold text-primary mb-1">{assessment.subheading}</p>
+                                <CardTitle className="font-headline text-2xl">{assessment.title}</CardTitle>
+                            </div>
+                            {assessment.icon}
+                        </div>
                       </CardHeader>
-                      <CardContent>
-                        <Link href="/assessment" className="w-full">
+                      <CardContent className="flex-grow">
+                        <ul className="space-y-2 mt-4">
+                            {assessment.workflows.map(flow => (
+                                <li key={flow} className="flex items-center gap-2 text-muted-foreground">
+                                    <ArrowRight className="h-4 w-4 text-primary/50" />
+                                    <span>{flow}</span>
+                                </li>
+                            ))}
+                        </ul>
+                      </CardContent>
+                      <CardFooter>
+                        <Link href={`/assessment?type=${assessment.type}`} className="w-full">
                            <Button className="w-full" variant="secondary">
-                            {assessment.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                            Take Assessment <ArrowRight className="ml-2 h-4 w-4" />
                           </Button>
                         </Link>
-                      </CardContent>
+                      </CardFooter>
                     </Card>
                   </div>
                 </CarouselItem>

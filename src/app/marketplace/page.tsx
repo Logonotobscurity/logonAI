@@ -14,6 +14,20 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+const marketplaceCategories = [
+  { value: 'automation-ops', label: 'Automation Ops' },
+  { value: 'assistant-tools', label: 'Assistant Tools' },
+  { value: 'process-mining', label: 'Process Mining' },
+  { value: 'integration-services', label: 'Integration Services' },
+];
+
+const industryCategories = [
+  { value: 'finance', label: 'Finance' },
+  { value: 'hr', label: 'Human Resources' },
+  { value: 'retail', label: 'Retail' },
+  { value: 'marketing', label: 'Marketing' },
+]
+
 export default function MarketplacePage() {
   return (
     <div className="bg-secondary/30">
@@ -27,7 +41,7 @@ export default function MarketplacePage() {
 
         <section className="mb-12">
           <div className="bg-background p-6 rounded-lg shadow-md">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
               <div className="md:col-span-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -37,13 +51,24 @@ export default function MarketplacePage() {
               <div className="md:col-span-1">
                  <Select>
                   <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Filter by category" />
+                    <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="strategy">Business Strategy</SelectItem>
-                    <SelectItem value="ml">Machine Learning</SelectItem>
-                    <SelectItem value="data-viz">Data Visualization</SelectItem>
-                    <SelectItem value="nlp">NLP</SelectItem>
+                    {marketplaceCategories.map(cat => (
+                      <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+               <div className="md:col-span-1">
+                 <Select>
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {industryCategories.map(cat => (
+                      <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
