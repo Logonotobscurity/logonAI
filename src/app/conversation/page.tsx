@@ -1,32 +1,31 @@
 
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/lib/types";
-import { Bot, FileText, Briefcase, Mic, Sparkles, Send, Upload } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { Bot, FileText, Briefcase, Send } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
-import { useVoice } from "@/hooks/use-voice";
-import { aiDrivenMatching } from "@/ai/flows/ai-driven-matching";
 import Link from "next/link";
 import { agents } from "@/lib/mock-data";
 
+interface ChatResponse {
+  reasoning: string;
+  agentSuggestions: string[];
+}
 
 export default function ConversationPage() {
     const searchParams = useSearchParams();
     const initialQuery = searchParams.get('q');
     
-    const { transcript, isListening, isSpeaking, voiceState, startListening, stopListening, speak } = useVoice();
-    
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [suggestedAgents, setSuggestedAgents] = useState<any[]>([]);
-    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
         setMessages([
@@ -39,12 +38,6 @@ export default function ConversationPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialQuery]);
     
-    useEffect(() => {
-        if (transcript && !isListening) {
-            handleSend(transcript);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [transcript, isListening]);
 
     const handleSend = async (text: string) => {
         if (text.trim() === '') return;
@@ -69,7 +62,17 @@ export default function ConversationPage() {
         setMessages(prev => [...prev, newUserMessage, aiThinkingMessage]);
 
         try {
-            const { agentSuggestions, reasoning } = await aiDrivenMatching({ userInput: text });
+            const response = await fetch('/api/chat', {
+              method: 'POST',
+              body: JSON.stringify({ userInput: text }),
+              headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const { reasoning, agentSuggestions }: ChatResponse = await response.json();
             
             const aiResponseMessage: Message = {
                 id: aiThinkingMessageId, // Use the same ID to replace the "thinking" message
@@ -80,8 +83,6 @@ export default function ConversationPage() {
             
             setMessages(prev => prev.map(m => m.id === aiResponseMessage.id ? aiResponseMessage : m));
 
-            speak(reasoning);
-            
             if (agentSuggestions.length > 0) {
               const suggestedProducts = agents.filter(p => agentSuggestions.includes(p.id));
               setSuggestedAgents(suggestedProducts);
@@ -99,19 +100,6 @@ export default function ConversationPage() {
         }
     };
     
-    const getMicIcon = () => {
-        switch(voiceState) {
-            case 'listening':
-                return <Mic className="h-6 w-6 text-red-500" />;
-            case 'speaking':
-                 return <Sparkles className="h-6 w-6 text-primary animate-pulse" />;
-            case 'thinking':
-                return <Bot className="h-6 w-6 animate-spin" />;
-            default:
-                return <Mic className="h-6 w-6" />;
-        }
-    }
-
     return (
         <div className="container mx-auto py-8">
              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-10rem)]">
@@ -155,23 +143,13 @@ export default function ConversationPage() {
                         <div className="p-4 border-t">
                             <div className="relative">
                                 <Input 
-                                    placeholder="Type your message or upload a file..." 
-                                    className="h-12 pr-24"
+                                    placeholder="Type your message..." 
+                                    className="h-12 pr-14"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSend(input)}
                                 />
                                 <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                     <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        className="h-10 w-10 voice-widget"
-                                        onClick={isListening ? stopListening : startListening}
-                                        disabled={isSpeaking || voiceState === 'thinking'}
-                                        data-state={voiceState}
-                                    >
-                                        {getMicIcon()}
-                                    </Button>
                                     <Button size="icon" className="h-10 w-10" onClick={() => handleSend(input)} disabled={!input}>
                                         <Send className="h-5 w-5"/>
                                     </Button>

@@ -44,7 +44,7 @@ export default function Header() {
             </Link>
           </div>
           <nav className="hidden md:flex">
-            <Button>Join Waitlist</Button>
+            <Button>Login</Button>
           </nav>
           <button
             className="md:hidden"
@@ -73,7 +73,7 @@ export default function Header() {
                 {link.title}
               </Link>
             ))}
-            <Button onClick={() => setIsMenuOpen(false)}>Join Waitlist</Button>
+            <Button onClick={() => setIsMenuOpen(false)}>Login</Button>
           </div>
         </div>
       )}
