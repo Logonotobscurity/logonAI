@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { z } from 'genkit';
+import { z } from 'zod';
 
 
 export interface MarketplaceProduct {
@@ -81,18 +81,3 @@ export interface MarketplaceCategory {
   value: string;
   label: string;
 }
-
-export const JoinWaitlistInputSchema = z.object({
-  email: z.string().email(),
-});
-export type JoinWaitlistInput = z.infer<typeof JoinWaitlistInputSchema>;
-
-export const TextToSpeechInputSchema = z.object({
-  text: z.string(),
-});
-export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
-
-export const TextToSpeechOutputSchema = z.object({
-  media: z.string().describe("The base64 encoded WAV audio data URI."),
-});
-export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
