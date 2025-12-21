@@ -3,9 +3,19 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./logo";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useUser } from "@/firebase";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 const navLinks = [
   { title: "Features", href: "/#features" },
@@ -14,8 +24,81 @@ const navLinks = [
   { title: "Dashboard", href: "/dashboard" },
 ];
 
+function UserNav() {
+  const { user, firestoreUser } = useUser();
+
+  const handleSignIn = async () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Error signing in with Google: ", error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
+
+  if (!user) {
+    return <Button onClick={handleSignIn}>Login</Button>;
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? ''} />
+            <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuItem className="flex flex-col items-start">
+          <div className="text-sm font-medium">{user.displayName}</div>
+          <div className="text-xs text-muted-foreground">{user.email}</div>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleSignOut}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useUser();
+
+  const handleSignOut = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
+  
+  const handleSignIn = async () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error("Error signing in with Google: ", error);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -43,9 +126,9 @@ export default function Header() {
               <Logo />
             </Link>
           </div>
-          <nav className="hidden md:flex">
-            <Button>Login</Button>
-          </nav>
+          <div className="hidden md:flex">
+            <UserNav />
+          </div>
           <button
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -73,7 +156,11 @@ export default function Header() {
                 {link.title}
               </Link>
             ))}
-            <Button onClick={() => setIsMenuOpen(false)}>Login</Button>
+            {user ? (
+              <Button onClick={handleSignOut} className="w-full">Logout</Button>
+            ) : (
+              <Button onClick={handleSignIn} className="w-full">Login</Button>
+            )}
           </div>
         </div>
       )}

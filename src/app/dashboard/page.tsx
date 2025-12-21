@@ -22,9 +22,13 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
-
+import { useAuth } from "@/hooks/use-auth";
+import { useUser } from "@/firebase";
 
 export default function DashboardPage() {
+  useAuth();
+  const { user } = useUser();
+
   const featuredAgents = agents.slice(0,2);
   return (
     <SidebarProvider>
@@ -61,7 +65,7 @@ export default function DashboardPage() {
                         <SidebarMenuButton><Settings />Settings</SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton><LogOut />Logout</SidebarMenuButton>
+                        <Link href="/" className="w-full"><SidebarMenuButton><LogOut />Logout</SidebarMenuButton></Link>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>
@@ -83,14 +87,14 @@ export default function DashboardPage() {
                         <span className="sr-only">Notifications</span>
                     </Button>
                     <Avatar>
-                        <AvatarImage src="https://placehold.co/40x40.png" alt="User Avatar"/>
-                        <AvatarFallback>U</AvatarFallback>
+                        <AvatarImage src={user?.photoURL ?? "https://placehold.co/40x40.png"} alt="User Avatar"/>
+                        <AvatarFallback>{user?.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
                     </Avatar>
                 </div>
             </header>
             <main className="p-4 md:p-8">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, User!</h2>
+                    <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, {user?.displayName ?? 'User'}!</h2>
                     <p className="text-muted-foreground">Good to see you again. Ready to explore?</p>
                 </div>
 
