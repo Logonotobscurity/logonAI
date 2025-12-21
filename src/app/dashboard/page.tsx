@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow } from "lucide-react";
+import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
@@ -53,6 +53,9 @@ export default function DashboardPage() {
                     </SidebarMenuItem>
                      <SidebarMenuItem>
                         <Link href="/modeler" className="w-full"><SidebarMenuButton><Workflow />Modeler</SidebarMenuButton></Link>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <Link href="/vendors" className="w-full"><SidebarMenuButton><Briefcase />Vendors</SidebarMenuButton></Link>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <Link href="/conversation" className="w-full"><SidebarMenuButton><MessageCircle />Conversations</SidebarMenuButton></Link>
