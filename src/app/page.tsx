@@ -4,11 +4,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Mic, Search, Send } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
-import { capabilities, assessments, agents } from "@/lib/mock-data";
+import { assessments, agents, capabilities } from "@/lib/mock-data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -39,19 +39,16 @@ export default function Home() {
               LOG_ON helps you assess, connect, and activate intelligent solutions instantly. Start a conversation with our AI to discover your path to growth.
             </p>
             <div className="relative mb-6 max-w-2xl mx-auto">
-                <Send className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="text"
                     placeholder="Describe your business challenge or upload a document..."
-                    className="h-16 rounded-full border-2 pl-14 pr-32 text-lg shadow-lg"
+                    className="h-16 rounded-full border-2 pl-14 pr-24 text-lg shadow-lg"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleStartConversation()}
                 />
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 transform flex items-center gap-2">
-                    <Button onClick={handleStartConversation} type="submit" variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" aria-label="Use microphone">
-                    <Mic className="h-6 w-6" />
-                    </Button>
                     <Button onClick={handleStartConversation} type="submit" size="icon" className="rounded-full h-12 w-12 bg-primary text-primary-foreground hover:bg-primary/90" aria-label="Start conversation">
                     <ArrowRight className="h-6 w-6" />
                     </Button>
@@ -179,9 +176,6 @@ export default function Home() {
                 <CardContent>
                   <p className="font-body text-muted-foreground">Build, publish, and monetize your AI agents & automations on LOG_ON.</p>
                 </CardContent>
-                <CardFooter>
-                  <Button variant="outline">Get Started</Button>
-                </CardFooter>
               </Card>
               <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:100ms]">
                 <CardHeader>
@@ -190,9 +184,6 @@ export default function Home() {
                 <CardContent>
                   <p className="font-body text-muted-foreground">Got an idea? Share your no-code/low-code automations with our global audience.</p>
                 </CardContent>
-                 <CardFooter>
-                   <Button variant="outline">Submit Solution</Button>
-                </CardFooter>
               </Card>
               <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:200ms]">
                 <CardHeader>
@@ -201,9 +192,6 @@ export default function Home() {
                 <CardContent>
                   <p className="font-body text-muted-foreground">Leverage our marketplace for fair revenue sharing and reach a growing user base.</p>
                 </CardContent>
-                 <CardFooter>
-                   <Button variant="outline">Learn More</Button>
-                </CardFooter>
               </Card>
           </div>
         </div>
@@ -212,7 +200,5 @@ export default function Home() {
     </div>
   );
 }
-
-    
 
     
