@@ -13,14 +13,11 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useUser, getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "@/firebase";
+import { useUser } from "@/firebase";
 import { MarketplaceIcon, VendorsIcon } from "./icons";
+import { useRouter } from "next/navigation";
 
 
 const navLinks = [
@@ -31,25 +28,12 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, auth } = useUser();
+  const { user } = useUser();
+  const router = useRouter();
 
-  const handleGoogleSignIn = async () => {
-    if (!auth) return;
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Error signing in with Google", error);
-    }
-  };
-
-  const handleSignOut = async () => {
-    if (!auth) return;
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error signing out", error);
-    }
+  const handleSignOut = () => {
+    // In demo mode, just redirect to home
+    router.push('/');
   };
 
 
@@ -117,7 +101,7 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-             <Button onClick={handleGoogleSignIn}>Login / Register</Button>
+             <Button>Login / Register</Button>
           )}
 
           <button
@@ -148,7 +132,7 @@ export default function Header() {
               </Link>
             ))}
              <div className="w-full px-4">
-               <Button onClick={handleGoogleSignIn} className="w-full">Login / Register</Button>
+               <Button className="w-full">Login / Register</Button>
             </div>
           </div>
         </div>
@@ -156,5 +140,3 @@ export default function Header() {
     </header>
   );
 }
-
-    
