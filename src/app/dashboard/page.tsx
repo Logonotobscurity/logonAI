@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase, Mic, ScreenShare, Bot } from "lucide-react";
+import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase, Mic, ScreenShare, Bot, Info } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents, industryCategories } from "@/lib/mock-data";
@@ -30,6 +30,8 @@ import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 const activityIconClassMap = {
@@ -148,6 +150,22 @@ export default function DashboardPage() {
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                            <Label htmlFor="api-key">Bring Your Own API Key</Label>
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>Provide your own API key to use a custom model.</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                        <Input id="api-key" type="password" placeholder="Enter your API key" />
+                                    </div>
+                                    <div className="space-y-2">
                                         <h4 className="font-medium">Keyboard Shortcuts</h4>
                                         <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
                                             <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">M</kbd> - Toggle Microphone</li>
@@ -262,3 +280,5 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
+
+    

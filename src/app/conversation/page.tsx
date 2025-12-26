@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/lib/types";
-import { Bot, FileText, Briefcase, User, ScreenShare, Wifi, WifiOff } from "lucide-react";
+import { Bot, FileText, Briefcase, User, ScreenShare, Wifi, WifiOff, Send, Mic, Keyboard } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
@@ -15,6 +15,10 @@ import { agents } from "@/lib/mock-data";
 import { VoiceWidget } from "@/components/voice-widget";
 import type { AiDrivenMatchingOutput } from "@/ai/schemas";
 import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { CameraFeed } from "@/components/camera-feed";
 
 export default function ConversationPage() {
     const searchParams = useSearchParams();
@@ -26,6 +30,9 @@ export default function ConversationPage() {
     const [isListening, setIsListening] = useState(false);
     const [isOnline, setIsOnline] = useState(true);
     const [isAnalyzingScreen, setIsAnalyzingScreen] = useState(false);
+    const [textInput, setTextInput] = useState("");
+    const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice');
+    const [showCamera, setShowCamera] = useState(false);
     
     const { toast } = useToast();
     const thinkingMessageIdRef = useRef<string | null>(null);
@@ -62,6 +69,7 @@ export default function ConversationPage() {
         };
 
         setMessages(prev => [...prev, newUserMessage, aiThinkingMessage]);
+        setTextInput("");
 
         try {
             const response = await fetch('/api/chat', {
@@ -163,10 +171,17 @@ export default function ConversationPage() {
 
     const handleScreenAnalysis = () => {
         setIsAnalyzingScreen(true);
+        setShowCamera(true);
         toast({
             title: "Screen Analysis Started",
-            description: "Analyzing the content of your current screen...",
+            description: "Please point your camera at the screen content to analyze.",
         });
+    }
+
+    const handleCameraClose = () => {
+        setShowCamera(false);
+        setIsAnalyzingScreen(false);
+
         const analysisMessage: Message = {
             id: `${Date.now()}-analysis`,
             sender: 'ai',
@@ -185,14 +200,13 @@ export default function ConversationPage() {
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             setMessages(prev => prev.map(m => m.id === analysisMessage.id ? resultMessage : m));
-            setIsAnalyzingScreen(false);
             if (typeof window !== 'undefined' && window.speechSynthesis) {
                 const utterance = new SpeechSynthesisUtterance(resultText);
                 utterance.onstart = () => setIsSpeaking(true);
                 utterance.onend = () => setIsSpeaking(false);
                 window.speechSynthesis.speak(utterance);
             }
-        }, 3000);
+        }, 1500);
     }
     
     const voiceState = isListening ? 'listening' : isSpeaking ? 'speaking' : 'idle';
@@ -220,7 +234,8 @@ export default function ConversationPage() {
                                 {isAnalyzingScreen ? 'Analyzing...' : 'Analyze Screen'}
                             </Button>
                         </CardHeader>
-                        <CardContent className="p-0 flex-grow">
+                        <CardContent className="p-0 flex-grow relative">
+                            {showCamera && <CameraFeed onClose={handleCameraClose} />}
                              <ScrollArea className="h-[calc(100vh-25rem)] p-6" ref={scrollAreaRef}>
                                 <div className="space-y-6">
                                     {messages.map(message => (
@@ -243,13 +258,44 @@ export default function ConversationPage() {
                                 </div>
                             </ScrollArea>
                         </CardContent>
-                        <div className="p-4 border-t flex justify-center items-center h-32 bg-background/50">
-                           <VoiceWidget
-                             onListen={setIsListening}
-                             onResult={handleSend}
-                             state={voiceState}
-                             disabled={!isOnline}
-                           />
+                        <div className="p-4 border-t flex flex-col justify-center items-center h-48 bg-background/50">
+                            <div className="flex items-center space-x-2 mb-4">
+                                <Mic className="w-5 h-5 text-muted-foreground" />
+                                <Switch
+                                    id="input-mode"
+                                    checked={inputMode === 'text'}
+                                    onCheckedChange={(checked) => setInputMode(checked ? 'text' : 'voice')}
+                                    />
+                                <Keyboard className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                           
+                           {inputMode === 'voice' ? (
+                            <VoiceWidget
+                                onListen={setIsListening}
+                                onResult={handleSend}
+                                state={voiceState}
+                                disabled={!isOnline}
+                            />
+                           ) : (
+                            <div className="w-full flex items-center gap-2 px-4">
+                                <Textarea 
+                                    placeholder="Type your message here..."
+                                    className="flex-1 resize-none"
+                                    value={textInput}
+                                    onChange={(e) => setTextInput(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleSend(textInput);
+                                        }
+                                    }}
+                                />
+                                <Button onClick={() => handleSend(textInput)} disabled={!textInput.trim()}>
+                                    <Send className="h-4 w-4"/>
+                                    <span className="sr-only">Send</span>
+                                </Button>
+                            </div>
+                           )}
                         </div>
                     </Card>
                 </div>

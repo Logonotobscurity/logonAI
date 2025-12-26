@@ -17,7 +17,7 @@ interface AgentCardProps {
 export const AgentCard = React.memo(function AgentCard({ agent }: AgentCardProps) {
   return (
     <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
-       <CardHeader className="p-6 flex-row gap-4 items-start">
+       <CardHeader className="p-6 flex-row gap-4 items-start shrink-0">
         <Avatar className="w-16 h-16 border">
             <AvatarImage src={agent.avatar} alt={agent.name} />
             <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
@@ -40,7 +40,7 @@ export const AgentCard = React.memo(function AgentCard({ agent }: AgentCardProps
           ))}
         </div>
       </CardContent>
-      <div className="p-6 pt-0 mt-auto grid grid-cols-2 gap-2">
+      <div className="p-6 pt-0 mt-auto grid grid-cols-2 gap-2 shrink-0">
         <Link href={`/agent/${agent.id}`} passHref className="w-full">
           <Button className="w-full" variant="outline">
             View Profile
@@ -55,3 +55,5 @@ export const AgentCard = React.memo(function AgentCard({ agent }: AgentCardProps
     </Card>
   );
 });
+
+    
