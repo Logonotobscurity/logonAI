@@ -1,40 +1,26 @@
 import { NextResponse } from 'next/server';
+import { aiDrivenMatching } from '@/ai/flows/ai-driven-matching';
+import type { AiDrivenMatchingInput } from '@/ai/schemas';
 
 export async function POST(req: Request) {
-  const CHAT_SERVICE_URL = process.env.CHAT_URL || 'http://localhost:3001/chat';
-
   try {
-    const body = await req.json();
+    const body: AiDrivenMatchingInput = await req.json();
     
     // In a real application, you would add authentication and authorization checks here.
 
-    const upstreamResponse = await fetch(CHAT_SERVICE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Forward any necessary headers, like an API key for the backend service.
-        // 'Authorization': `Bearer ${process.env.CHAT_SERVICE_API_KEY}`
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!upstreamResponse.ok) {
-      const errorBody = await upstreamResponse.text();
-      console.error(`Error from upstream service: ${upstreamResponse.status} ${errorBody}`);
-      return NextResponse.json(
-        { error: `Error from upstream service: ${upstreamResponse.status}` },
-        { status: upstreamResponse.status }
-      );
+    if (!body.userInput) {
+      return NextResponse.json({ error: 'userInput is required' }, { status: 400 });
     }
 
-    const data = await upstreamResponse.json();
+    const result = await aiDrivenMatching(body);
     
-    return NextResponse.json(data);
+    return NextResponse.json(result);
 
   } catch (error) {
-    console.error('Error in chat proxy:', error);
+    console.error('Error in chat processing:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Internal Server Error', details: errorMessage },
       { status: 500 }
     );
   }

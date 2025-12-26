@@ -13,11 +13,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { agents } from "@/lib/mock-data";
 import { VoiceWidget } from "@/components/voice-widget";
-
-interface ChatResponse {
-  reasoning: string;
-  agentSuggestions: string[];
-}
+import type { AiDrivenMatchingOutput } from "@/ai/schemas";
 
 export default function ConversationPage() {
     const searchParams = useSearchParams();
@@ -29,6 +25,16 @@ export default function ConversationPage() {
     const [isListening, setIsListening] = useState(false);
     
     const thinkingMessageIdRef = useRef<string | null>(null);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTo({
+                top: scrollAreaRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    };
 
     const handleSend = useCallback(async (text: string) => {
         if (text.trim() === '') return;
@@ -64,7 +70,7 @@ export default function ConversationPage() {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const { reasoning, agentSuggestions }: ChatResponse = await response.json();
+            const { reasoning, agentSuggestions }: AiDrivenMatchingOutput = await response.json();
             
             const aiResponseMessage: Message = {
                 id: aiThinkingMessageId,
@@ -73,35 +79,39 @@ export default function ConversationPage() {
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             
-            setMessages(prev => prev.map(m => m.id === aiResponseMessage.id ? aiResponseMessage : m));
+            setMessages(prev => prev.map(m => m.id === aiThinkingMessageId ? aiResponseMessage : m));
 
-            // Speak the response
-            const utterance = new SpeechSynthesisUtterance(reasoning);
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            window.speechSynthesis.speak(utterance);
+            if (typeof window !== 'undefined' && window.speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(reasoning);
+                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onend = () => setIsSpeaking(false);
+                window.speechSynthesis.speak(utterance);
+            }
 
-
-            if (agentSuggestions.length > 0) {
+            if (agentSuggestions && agentSuggestions.length > 0) {
               const suggestedProducts = agents.filter(p => agentSuggestions.includes(p.id));
               setSuggestedAgents(suggestedProducts);
+            } else {
+              setSuggestedAgents([]);
             }
 
         } catch (error) {
             console.error(error);
             const errorText = 'Sorry, I encountered an error. Please try again.';
             const errorResponse: Message = {
-                 id: aiThinkingMessageId,
+                id: thinkingMessageIdRef.current || `${Date.now()}-error`,
                 sender: 'ai',
                 text: errorText,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             setMessages(prev => prev.map(m => m.id === errorResponse.id ? errorResponse : m));
             
-            const utterance = new SpeechSynthesisUtterance(errorText);
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            window.speechSynthesis.speak(utterance);
+            if (typeof window !== 'undefined' && window.speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(errorText);
+                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onend = () => setIsSpeaking(false);
+                window.speechSynthesis.speak(utterance);
+            }
         }
     }, []);
 
@@ -114,17 +124,25 @@ export default function ConversationPage() {
         if (initialQuery) {
           handleSend(initialQuery);
         } else {
-            const utterance = new SpeechSynthesisUtterance(welcomeMessage);
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            window.speechSynthesis.speak(utterance);
+            if (typeof window !== 'undefined' && window.speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(welcomeMessage);
+                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onend = () => setIsSpeaking(false);
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
         return () => {
-            window.speechSynthesis.cancel();
+            if (typeof window !== 'undefined' && window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialQuery, handleSend]);
+    }, [initialQuery]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
     
     const voiceState = isListening ? 'listening' : isSpeaking ? 'speaking' : 'idle';
 
@@ -146,7 +164,7 @@ export default function ConversationPage() {
                             </div>
                         </CardHeader>
                         <CardContent className="p-0 flex-grow">
-                             <ScrollArea className="h-[calc(100vh-25rem)] p-6">
+                             <ScrollArea className="h-[calc(100vh-25rem)] p-6" ref={scrollAreaRef}>
                                 <div className="space-y-6">
                                     {messages.map(message => (
                                         <div key={message.id} className={cn("flex items-end gap-2", message.sender === 'user' ? 'justify-end' : 'justify-start')}>
