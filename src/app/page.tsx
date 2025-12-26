@@ -168,16 +168,17 @@ export default function Home() {
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Innovate &amp; Partner with LOG_ON</h2>
             <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Join our ecosystem of creators and build the future of autonomous business.</p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-8 max-w-6xl mx-auto">
-              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 lg:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <Card className="md:col-span-2 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">Become a Creator</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-body text-muted-foreground">Build, publish, and monetize your AI agents &amp; automations on the LOG_ON platform. Reach a global audience and contribute to the future of AI-driven business solutions.</p>
+                  <p className="font-body text-muted-foreground mb-4">Build, publish, and monetize your AI agents &amp; automations on the LOG_ON platform. Reach a global audience and contribute to the future of AI-driven business solutions.</p>
+                  <Button>Contact Us</Button>
                 </CardContent>
               </Card>
-              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:100ms] row-start-2 lg:row-start-auto">
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:100ms]">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">Submit Your Solutions</CardTitle>
                 </CardHeader>
@@ -193,12 +194,6 @@ export default function Home() {
                   <p className="font-body text-muted-foreground">Leverage our marketplace for fair revenue sharing and reach a growing user base.</p>
                 </CardContent>
               </Card>
-              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:300ms] bg-primary/10 flex flex-col items-center justify-center text-center p-8">
-                  <Rocket className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="font-headline text-xl font-semibold mb-2">Ready to Launch?</h3>
-                  <p className="font-body text-muted-foreground mb-4">Join us today.</p>
-                  <Button>Contact Us</Button>
-              </Card>
           </div>
         </div>
       </section>
@@ -206,4 +201,3 @@ export default function Home() {
   );
 }
 
-    
