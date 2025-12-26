@@ -4,15 +4,15 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/lib/types";
-import { Bot, FileText, Briefcase, Send } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Bot, FileText, Briefcase } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { agents } from "@/lib/mock-data";
+import { VoiceWidget } from "@/components/voice-widget";
 
 interface ChatResponse {
   reasoning: string;
@@ -24,25 +24,15 @@ export default function ConversationPage() {
     const initialQuery = searchParams.get('q');
     
     const [messages, setMessages] = useState<Message[]>([]);
-    const [input, setInput] = useState('');
     const [suggestedAgents, setSuggestedAgents] = useState<any[]>([]);
-
-    useEffect(() => {
-        setMessages([
-             { id: '1', sender: 'ai', text: 'Hello! I am the LOG_ON assistant. How can I help you identify your next growth opportunity today?', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
-        ]);
-        
-        if (initialQuery) {
-          handleSend(initialQuery);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialQuery]);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const [isListening, setIsListening] = useState(false);
     
+    const thinkingMessageIdRef = useRef<string | null>(null);
 
-    const handleSend = async (text: string) => {
+    const handleSend = useCallback(async (text: string) => {
         if (text.trim() === '') return;
         
-        setInput('');
         const newUserMessage: Message = {
             id: `${Date.now()}-user`,
             sender: 'user',
@@ -51,6 +41,8 @@ export default function ConversationPage() {
         };
         
         const aiThinkingMessageId = `${Date.now()}-ai-thinking`;
+        thinkingMessageIdRef.current = aiThinkingMessageId;
+
         const aiThinkingMessage: Message = {
             id: aiThinkingMessageId,
             sender: 'ai',
@@ -75,13 +67,20 @@ export default function ConversationPage() {
             const { reasoning, agentSuggestions }: ChatResponse = await response.json();
             
             const aiResponseMessage: Message = {
-                id: aiThinkingMessageId, // Use the same ID to replace the "thinking" message
+                id: aiThinkingMessageId,
                 sender: 'ai',
                 text: reasoning,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             
             setMessages(prev => prev.map(m => m.id === aiResponseMessage.id ? aiResponseMessage : m));
+
+            // Speak the response
+            const utterance = new SpeechSynthesisUtterance(reasoning);
+            utterance.onstart = () => setIsSpeaking(true);
+            utterance.onend = () => setIsSpeaking(false);
+            window.speechSynthesis.speak(utterance);
+
 
             if (agentSuggestions.length > 0) {
               const suggestedProducts = agents.filter(p => agentSuggestions.includes(p.id));
@@ -90,16 +89,45 @@ export default function ConversationPage() {
 
         } catch (error) {
             console.error(error);
+            const errorText = 'Sorry, I encountered an error. Please try again.';
             const errorResponse: Message = {
-                 id: aiThinkingMessageId, // Use the same ID to replace the "thinking" message
+                 id: aiThinkingMessageId,
                 sender: 'ai',
-                text: 'Sorry, I encountered an error. Please try again.',
+                text: errorText,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             setMessages(prev => prev.map(m => m.id === errorResponse.id ? errorResponse : m));
+            
+            const utterance = new SpeechSynthesisUtterance(errorText);
+            utterance.onstart = () => setIsSpeaking(true);
+            utterance.onend = () => setIsSpeaking(false);
+            window.speechSynthesis.speak(utterance);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        const welcomeMessage = "Hello! I am the LOG_ON assistant. How can I help you identify your next growth opportunity today?";
+        setMessages([
+             { id: '1', sender: 'ai', text: welcomeMessage, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+        ]);
+        
+        if (initialQuery) {
+          handleSend(initialQuery);
+        } else {
+            const utterance = new SpeechSynthesisUtterance(welcomeMessage);
+            utterance.onstart = () => setIsSpeaking(true);
+            utterance.onend = () => setIsSpeaking(false);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        return () => {
+            window.speechSynthesis.cancel();
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialQuery, handleSend]);
     
+    const voiceState = isListening ? 'listening' : isSpeaking ? 'speaking' : 'idle';
+
     return (
         <div className="container mx-auto py-8">
              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-10rem)]">
@@ -140,21 +168,12 @@ export default function ConversationPage() {
                                 </div>
                             </ScrollArea>
                         </CardContent>
-                        <div className="p-4 border-t">
-                            <div className="relative">
-                                <Input 
-                                    placeholder="Type your message..." 
-                                    className="h-12 pr-14"
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleSend(input)}
-                                />
-                                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                    <Button size="icon" className="h-10 w-10" onClick={() => handleSend(input)} disabled={!input}>
-                                        <Send className="h-5 w-5"/>
-                                    </Button>
-                                </div>
-                            </div>
+                        <div className="p-4 border-t flex justify-center items-center h-32">
+                           <VoiceWidget
+                             onListen={setIsListening}
+                             onResult={handleSend}
+                             state={voiceState}
+                           />
                         </div>
                     </Card>
                 </div>

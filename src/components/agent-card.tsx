@@ -17,7 +17,7 @@ interface AgentCardProps {
 export const AgentCard = React.memo(function AgentCard({ agent }: AgentCardProps) {
   return (
     <Card className="flex flex-col h-full transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
-       <CardHeader className="p-6 flex-row gap-4 items-center">
+       <CardHeader className="p-6 flex-row gap-4 items-start">
         <Avatar className="w-16 h-16 border">
             <AvatarImage src={agent.avatar} alt={agent.name} />
             <AvatarFallback>{agent.name.charAt(0)}</AvatarFallback>
