@@ -1,10 +1,10 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import Header from '@/components/header';
-import Footer from '@/components/footer';
 import { UserProvider } from '@/firebase/auth/use-user';
+import { PageWrapper } from '@/components/page-wrapper';
 
 export const metadata: Metadata = {
   title: 'LOG_ON AI Solutions Platform',
@@ -16,6 +16,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -30,11 +31,9 @@ export default function RootLayout({
       </head>
       <body className={cn('min-h-screen bg-background font-body antialiased')} suppressHydrationWarning={true}>
         <UserProvider>
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+            <PageWrapper>
+                {children}
+            </PageWrapper>
           <Toaster />
         </UserProvider>
       </body>
