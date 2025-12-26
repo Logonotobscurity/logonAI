@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -18,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase, Mic, ScreenShare, Bot, Info } from "lucide-react";
+import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase, Info } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents, industryCategories } from "@/lib/mock-data";
@@ -280,5 +279,3 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
-
-    
