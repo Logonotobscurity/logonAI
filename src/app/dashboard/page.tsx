@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -22,9 +21,9 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/firebase";
-import { cn } from "@/lib/utils";
 
 const activityIconClassMap = {
     Assessment: {
@@ -44,16 +43,15 @@ const activityIconClassMap = {
 export default function DashboardPage() {
   useAuth();
   const { user } = useUser();
-
   const featuredAgents = agents.slice(0,2);
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-secondary/30">
-        <Sidebar>
+        <Sidebar className="z-30 w-full md:w-72 lg:w-80">
             <SidebarHeader>
                 <div className="flex items-center gap-2">
                     <Logo />
-                    <Badge variant="secondary">Beta</Badge>
+                    <Badge variant='secondary'>Beta</Badge>
                 </div>
             </SidebarHeader>
             <SidebarContent>
@@ -93,7 +91,7 @@ export default function DashboardPage() {
         <SidebarInset className="flex-1">
             <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background px-4 md:px-8">
                 <div className="flex items-center gap-4">
-                    <SidebarTrigger className="md:hidden"/>
+                    <SidebarTrigger className="lg:hidden"/>
                     <h1 className="text-xl font-semibold font-headline">Dashboard</h1>
                 </div>
                  <div className="flex items-center gap-4">
@@ -106,14 +104,14 @@ export default function DashboardPage() {
                         <span className="sr-only">Notifications</span>
                     </Button>
                     <Avatar>
-                        <AvatarImage src={user?.photoURL ?? "https://placehold.co/40x40.png"} alt="User Avatar"/>
-                        <AvatarFallback>{user?.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
+                        <AvatarImage src={user?.photoURL || "https://placehold.co/40x40.png"} alt="User Avatar"/>
+                        <AvatarFallback>{user?.displayName?.charAt(0) || 'U'}</AvatarFallback>
                     </Avatar>
                 </div>
             </header>
             <main className="p-4 md:p-8">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, {user?.displayName ?? 'User'}!</h2>
+                    <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, {user?.displayName || 'User'}!</h2>
                     <p className="text-muted-foreground">Good to see you again. Ready to explore?</p>
                 </div>
 
@@ -170,7 +168,7 @@ export default function DashboardPage() {
                                 <CardHeader>
                                     <CardTitle className="text-xl font-headline">Suggested For You</CardTitle>
                                     <CardDescription>Based on your recent activity.</CardDescription>
-                                </CardHeader>
+                                </Header>
                                 <CardContent className="space-y-4">
                                   {featuredAgents.map((agent) => (
                                     <AgentCard key={agent.id} agent={agent} />
@@ -186,5 +184,3 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
-
-    
