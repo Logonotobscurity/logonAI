@@ -11,11 +11,11 @@ import { Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis
 } from "@/components/ui/pagination";
 
 const AGENTS_PER_PAGE = 9;
@@ -27,24 +27,27 @@ export default function VendorsPage() {
   const [rating, setRating] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredAgents = useMemo(() => {
-    return agents.filter(agent => {
-      const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) || agent.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = category === 'all' || agent.category === category;
-      const matchesIndustry = industry === 'all' || agent.industry === industry;
-      const matchesRating = rating === 'all' || agent.rating >= parseInt(rating);
+  // For this demo, we'll reuse the same agent list for vendors
+  const vendors = useMemo(() => agents.filter(a => a.category === 'integration-services' || a.tags.includes('SIEM')), []);
+
+  const filteredVendors = useMemo(() => {
+    return vendors.filter(vendor => {
+      const matchesSearch = vendor.name.toLowerCase().includes(searchQuery.toLowerCase()) || vendor.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = category === 'all' || vendor.category === category;
+      const matchesIndustry = industry === 'all' || vendor.industry === industry;
+      const matchesRating = rating === 'all' || vendor.rating >= parseInt(rating);
       return matchesSearch && matchesCategory && matchesRating && matchesIndustry;
     });
-  }, [searchQuery, category, industry, rating]);
+  }, [searchQuery, category, industry, rating, vendors]);
 
-  const totalPages = Math.ceil(filteredAgents.length / AGENTS_PER_PAGE);
+  const totalPages = Math.ceil(filteredVendors.length / AGENTS_PER_PAGE);
   
-  const currentAgents = useMemo(() => {
-    return filteredAgents.slice(
+  const currentVendors = useMemo(() => {
+    return filteredVendors.slice(
       (currentPage - 1) * AGENTS_PER_PAGE,
       currentPage * AGENTS_PER_PAGE
     );
-  }, [filteredAgents, currentPage]);
+  }, [filteredVendors, currentPage]);
 
   const handleSearch = useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -117,10 +120,10 @@ export default function VendorsPage() {
         </section>
         
         <section>
-          {currentAgents.length > 0 ? (
+          {currentVendors.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {currentAgents.map((agent) => (
-                <AgentCard key={agent.id} agent={agent} />
+              {currentVendors.map((vendor) => (
+                <AgentCard key={vendor.id} agent={vendor} />
               ))}
             </div>
           ) : (
@@ -143,7 +146,7 @@ export default function VendorsPage() {
                     className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                   />
                 </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                    <PaginationItem key={page}>
                     <PaginationLink 
                       href="#"
@@ -154,6 +157,7 @@ export default function VendorsPage() {
                     </PaginationLink>
                   </PaginationItem>
                 ))}
+                 {totalPages > 5 && currentPage < totalPages - 2 && <PaginationEllipsis />}
                 <PaginationItem>
                   <PaginationNext 
                     href="#" 

@@ -21,7 +21,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase, Mic, ScreenShare, Bot } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { quickActions, activityFeed, agents } from "@/lib/mock-data";
+import { quickActions, activityFeed, agents, industryCategories } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
@@ -139,10 +139,11 @@ export default function DashboardPage() {
                                                 <SelectValue placeholder="Select Industry Template" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="default">Default</SelectItem>
-                                                <SelectItem value="finance">Finance</SelectItem>
-                                                <SelectItem value="healthcare">Healthcare</SelectItem>
-                                                <SelectItem value="retail">Retail</SelectItem>
+                                                {industryCategories.map((cat) => (
+                                                  <SelectItem key={cat.value} value={cat.value} disabled={cat.value === 'all'}>
+                                                    {cat.label}
+                                                  </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -150,7 +151,7 @@ export default function DashboardPage() {
                                         <h4 className="font-medium">Keyboard Shortcuts</h4>
                                         <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
                                             <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">M</kbd> - Toggle Microphone</li>
-                                            <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">S</kbd> - Analyze Screen</li>
+                                            <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">S</kbd> - Analyze Screen</li>
                                             <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">,</kbd> - Open Settings</li>
                                         </ul>
                                     </div>
@@ -261,5 +262,3 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
-
-    
