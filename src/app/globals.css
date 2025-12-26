@@ -46,6 +46,13 @@ h1, h2, h3, h4, h5, h6 {
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 261 51% 54%;
+    --rsbs-backdrop-bg: rgba(0, 0, 0, 0.6);
+    --rsbs-bg: hsl(var(--background));
+    --rsbs-handle-bg: hsl(var(--muted-foreground) / 0.5);
+    --rsbs-max-w: auto;
+    --rsbs-ml: auto;
+    --rsbs-mr: auto;
+    --rsbs-p: 16px;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -217,3 +224,13 @@ h1, h2, h3, h4, h5, h6 {
 .navigation-menu-viewport[data-state='closed'] {
   animation-name: scale-out;
 }
+
+[data-rsbs-root] {
+  --rsbs-backdrop-bg: transparent !important;
+}
+
+[data-rsbs-header] {
+  padding: 8px 0 !important;
+}
+
+    

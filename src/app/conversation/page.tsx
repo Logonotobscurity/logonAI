@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/lib/types";
-import { Bot, FileText, Briefcase, User, ScreenShare, Wifi, WifiOff, Send, Mic, Keyboard } from "lucide-react";
+import { Bot, FileText, Briefcase, User, ScreenShare, Wifi, WifiOff, Send, Mic, Keyboard, ChevronUp, ChevronDown } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
@@ -20,6 +20,9 @@ import { Switch } from "@/components/ui/switch";
 import { CameraFeed } from "@/components/camera-feed";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { BottomSheet } from 'react-spring-bottom-sheet';
+import 'react-spring-bottom-sheet/dist/style.css';
+
 
 export default function ConversationPage() {
     const searchParams = useSearchParams();
@@ -35,6 +38,7 @@ export default function ConversationPage() {
     const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice');
     const [showCamera, setShowCamera] = useState(false);
     const isMobile = useIsMobile();
+    const [isPanelOpen, setIsPanelOpen] = useState(false);
     
     const { toast } = useToast();
     const thinkingMessageIdRef = useRef<string | null>(null);
@@ -219,8 +223,50 @@ export default function ConversationPage() {
     
     const voiceState = isListening ? 'listening' : isSpeaking ? 'speaking' : 'idle';
 
-    const ChatPanel = () => (
-         <Card className="flex-grow flex flex-col h-full">
+    const renderInputControls = () => (
+      <div className="flex flex-col justify-center items-center h-48 bg-background/50 w-full pt-4">
+          <div className="flex items-center space-x-2 mb-4">
+              <Mic className="w-5 h-5 text-muted-foreground" />
+              <Switch
+                  id="input-mode"
+                  checked={inputMode === 'text'}
+                  onCheckedChange={(checked) => setInputMode(checked ? 'text' : 'voice')}
+                  />
+              <Keyboard className="w-5 h-5 text-muted-foreground" />
+          </div>
+          
+          {inputMode === 'voice' ? (
+          <VoiceWidget
+              onListen={setIsListening}
+              onResult={handleSend}
+              state={voiceState}
+              disabled={!isOnline}
+          />
+          ) : (
+          <div className="w-full flex items-center gap-2 px-4">
+              <Textarea 
+                  placeholder="Type your message here..."
+                  className="flex-1 resize-none"
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSend(textInput);
+                      }
+                  }}
+              />
+              <Button onClick={() => handleSend(textInput)} disabled={!textInput.trim()}>
+                  <Send className="h-4 w-4"/>
+                  <span className="sr-only">Send</span>
+              </Button>
+          </div>
+          )}
+      </div>
+    );
+
+    const ChatPanel = ({ inSheet = false }: { inSheet?: boolean }) => (
+         <Card className={cn("flex-grow flex flex-col h-full", inSheet ? 'border-none shadow-none rounded-none' : '')}>
             <CardHeader className="flex-row items-center justify-between border-b">
                 <div className="flex items-center gap-4">
                     <Avatar>
@@ -263,45 +309,11 @@ export default function ConversationPage() {
                     </div>
                 </ScrollArea>
             </CardContent>
-            <div className="p-4 border-t flex flex-col justify-center items-center h-48 bg-background/50">
-                <div className="flex items-center space-x-2 mb-4">
-                    <Mic className="w-5 h-5 text-muted-foreground" />
-                    <Switch
-                        id="input-mode"
-                        checked={inputMode === 'text'}
-                        onCheckedChange={(checked) => setInputMode(checked ? 'text' : 'voice')}
-                        />
-                    <Keyboard className="w-5 h-5 text-muted-foreground" />
-                </div>
-                
-                {inputMode === 'voice' ? (
-                <VoiceWidget
-                    onListen={setIsListening}
-                    onResult={handleSend}
-                    state={voiceState}
-                    disabled={!isOnline}
-                />
-                ) : (
-                <div className="w-full flex items-center gap-2 px-4">
-                    <Textarea 
-                        placeholder="Type your message here..."
-                        className="flex-1 resize-none"
-                        value={textInput}
-                        onChange={(e) => setTextInput(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                handleSend(textInput);
-                            }
-                        }}
-                    />
-                    <Button onClick={() => handleSend(textInput)} disabled={!textInput.trim()}>
-                        <Send className="h-4 w-4"/>
-                        <span className="sr-only">Send</span>
-                    </Button>
-                </div>
-                )}
-            </div>
+            {!isMobile && (
+              <div className="border-t">
+                  {renderInputControls()}
+              </div>
+            )}
         </Card>
     );
 
@@ -344,35 +356,44 @@ export default function ConversationPage() {
         </Card>
     );
 
+    if (isMobile) {
+      return (
+        <div className="h-full flex flex-col">
+          <div className="flex-grow">
+            <ChatPanel inSheet={true} />
+          </div>
+          <BottomSheet 
+            open={true}
+            onDismiss={() => {}}
+            blocking={false}
+            snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight / 2]}
+            header={
+              <div className="flex items-center justify-center w-full p-2 bg-background rounded-t-lg cursor-pointer">
+                  <div className="w-8 h-1 bg-muted-foreground/50 rounded-full" />
+              </div>
+            }
+          >
+            {renderInputControls()}
+            <div className="p-4">
+              <ContextPanel />
+            </div>
+          </BottomSheet>
+        </div>
+      );
+    }
+
     return (
         <div className="container mx-auto py-4 md:py-8 h-full">
-            {isMobile ? (
-                <Tabs defaultValue="chat" className="w-full h-full flex flex-col">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="chat">Chat</TabsTrigger>
-                        <TabsTrigger value="context">Context</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="chat" className="flex-grow">
-                        <div className="h-full">
-                          <ChatPanel />
-                        </div>
-                    </TabsContent>
-                    <TabsContent value="context" className="flex-grow">
-                         <div className="h-full">
-                          <ContextPanel />
-                         </div>
-                    </TabsContent>
-                </Tabs>
-            ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-8rem)]">
-                    <div className="lg:col-span-2 flex flex-col h-full">
-                       <ChatPanel />
-                    </div>
-                    <div className="lg:col-span-1">
-                        <ContextPanel />
-                    </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-8rem)]">
+                <div className="lg:col-span-2 flex flex-col h-full">
+                    <ChatPanel />
                 </div>
-            )}
+                <div className="lg:col-span-1">
+                    <ContextPanel />
+                </div>
+            </div>
         </div>
     );
 }
+
+    
