@@ -9,9 +9,10 @@ interface VoiceWidgetProps {
   onListen: (isListening: boolean) => void;
   onResult: (result: string) => void;
   state: 'idle' | 'listening' | 'speaking';
+  disabled?: boolean;
 }
 
-export function VoiceWidget({ onListen, onResult, state }: VoiceWidgetProps) {
+export function VoiceWidget({ onListen, onResult, state, disabled }: VoiceWidgetProps) {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
@@ -54,6 +55,7 @@ export function VoiceWidget({ onListen, onResult, state }: VoiceWidgetProps) {
   }, [onListen, onResult]);
 
   const toggleListening = () => {
+    if (disabled) return;
     const recognition = recognitionRef.current;
     if (!recognition) return;
 
@@ -75,11 +77,13 @@ export function VoiceWidget({ onListen, onResult, state }: VoiceWidgetProps) {
         'voice-widget relative flex items-center justify-center h-24 w-24 rounded-full border-2 border-primary transition-all duration-300',
         'before:absolute before:inset-0 before:rounded-full before:opacity-0 before:transition-opacity',
         'after:absolute after:inset-0 after:rounded-full after:border-2 after:border-primary/50 after:transition-all after:content-[""]',
+        disabled && 'opacity-50 cursor-not-allowed'
       )}
     >
       <button
         onClick={toggleListening}
-        className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-110 active:scale-100"
+        disabled={disabled}
+        className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-110 active:scale-100 disabled:cursor-not-allowed disabled:bg-primary/80"
         aria-label={state === 'listening' ? 'Stop listening' : 'Start listening'}
       >
         {state === 'listening' ? (
@@ -91,3 +95,5 @@ export function VoiceWidget({ onListen, onResult, state }: VoiceWidgetProps) {
     </div>
   );
 }
+
+    

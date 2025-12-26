@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./logo";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -13,9 +13,14 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useUser, getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "@/firebase";
+import { MarketplaceIcon, VendorsIcon } from "./icons";
 
 
 const navLinks = [
@@ -65,6 +70,28 @@ export default function Header() {
                 {link.title}
               </Link>
             ))}
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-1">
+                  Connect
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-60">
+                <DropdownMenuItem asChild>
+                  <Link href="/marketplace">
+                    <MarketplaceIcon className="mr-2" />
+                    Agent Marketplace
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/vendors">
+                    <VendorsIcon className="mr-2" />
+                    Vendor Marketplace
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
         </div>
 
@@ -129,3 +156,5 @@ export default function Header() {
     </header>
   );
 }
+
+    

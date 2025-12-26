@@ -17,7 +17,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase, Mic, ScreenShare, Bot } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
@@ -25,27 +26,52 @@ import { AgentCard } from "@/components/agent-card";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/firebase";
+import { useEffect, useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+
 
 const activityIconClassMap = {
     Assessment: {
-        bg: "bg-primary/10",
-        text: "text-primary",
+        bg: "bg-blue-500/10",
+        text: "text-blue-500",
     },
     Marketplace: {
-        bg: "bg-secondary/10",
-        text: "text-secondary-foreground",
+        bg: "bg-purple-500/10",
+        text: "text-purple-500",
     },
     Conversation: {
-        bg: "bg-accent/10",
-        text: "text-accent-foreground",
+        bg: "bg-green-500/10",
+        text: "text-green-500",
     }
 };
 
 export default function DashboardPage() {
   useAuth();
+  const router = useRouter();
   const { user } = useUser();
   const featuredAgents = agents.slice(0,2);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.ctrlKey && e.key === ',') {
+            e.preventDefault();
+            setIsSettingsOpen(true);
+        }
+        if (e.ctrlKey && e.key === 'm') {
+            e.preventDefault();
+            router.push('/conversation');
+        }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [router]);
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-secondary/30">
@@ -81,7 +107,56 @@ export default function DashboardPage() {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton><Settings />Settings</SidebarMenuButton>
+                        <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                            <DialogTrigger asChild>
+                                <SidebarMenuButton><Settings />Settings</SidebarMenuButton>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Advanced Settings</DialogTitle>
+                                    <DialogDescription>
+                                        Customize your agent and interaction settings. Press Ctrl + , to open this menu.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 py-4">
+                                    <div className="space-y-2">
+                                        <Label>AI Model</Label>
+                                        <Select defaultValue="gemini">
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select AI Model" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="gemini">Gemini 1.5 Pro (Default)</SelectItem>
+                                                <SelectItem value="gpt4">GPT-4 Turbo</SelectItem>
+                                                <SelectItem value="claude">Claude 3</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Agent Template (Industry)</Label>
+                                         <Select defaultValue="default">
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select Industry Template" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="default">Default</SelectItem>
+                                                <SelectItem value="finance">Finance</SelectItem>
+                                                <SelectItem value="healthcare">Healthcare</SelectItem>
+                                                <SelectItem value="retail">Retail</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h4 className="font-medium">Keyboard Shortcuts</h4>
+                                        <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
+                                            <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">M</kbd> - Toggle Microphone</li>
+                                            <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">S</kbd> - Analyze Screen</li>
+                                            <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">,</kbd> - Open Settings</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <Link href="/" className="w-full"><SidebarMenuButton><LogOut />Logout</SidebarMenuButton></Link>
@@ -186,3 +261,5 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
+
+    

@@ -7,13 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/lib/types";
-import { Bot, FileText, Briefcase } from "lucide-react";
+import { Bot, FileText, Briefcase, User, ScreenShare, Wifi, WifiOff } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { agents } from "@/lib/mock-data";
 import { VoiceWidget } from "@/components/voice-widget";
 import type { AiDrivenMatchingOutput } from "@/ai/schemas";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ConversationPage() {
     const searchParams = useSearchParams();
@@ -23,7 +24,10 @@ export default function ConversationPage() {
     const [suggestedAgents, setSuggestedAgents] = useState<any[]>([]);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isListening, setIsListening] = useState(false);
+    const [isOnline, setIsOnline] = useState(true);
+    const [isAnalyzingScreen, setIsAnalyzingScreen] = useState(false);
     
+    const { toast } = useToast();
     const thinkingMessageIdRef = useRef<string | null>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -141,8 +145,55 @@ export default function ConversationPage() {
     }, [initialQuery]);
 
     useEffect(() => {
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
+
+    useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    const handleScreenAnalysis = () => {
+        setIsAnalyzingScreen(true);
+        toast({
+            title: "Screen Analysis Started",
+            description: "Analyzing the content of your current screen...",
+        });
+        const analysisMessage: Message = {
+            id: `${Date.now()}-analysis`,
+            sender: 'ai',
+            isThinking: true,
+            text: 'Analyzing screen content...',
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, analysisMessage]);
+
+        setTimeout(() => {
+            const resultText = "Based on the content of your screen, I suggest we look into optimizing your customer support workflow. Would you like to explore agents that specialize in that area?";
+            const resultMessage: Message = {
+                id: analysisMessage.id,
+                sender: 'ai',
+                text: resultText,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => prev.map(m => m.id === analysisMessage.id ? resultMessage : m));
+            setIsAnalyzingScreen(false);
+            if (typeof window !== 'undefined' && window.speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(resultText);
+                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onend = () => setIsSpeaking(false);
+                window.speechSynthesis.speak(utterance);
+            }
+        }, 3000);
+    }
     
     const voiceState = isListening ? 'listening' : isSpeaking ? 'speaking' : 'idle';
 
@@ -151,46 +202,53 @@ export default function ConversationPage() {
              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-10rem)]">
                 <div className="lg:col-span-2 flex flex-col h-full">
                     <Card className="flex-grow flex flex-col">
-                        <CardHeader className="flex-row items-center gap-4 border-b">
-                            <Avatar>
-                                <AvatarFallback><Bot/></AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <CardTitle className="font-headline text-lg">AI Assistant</CardTitle>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="h-2 w-2 rounded-full bg-green-500"></span>
-                                    <span className="text-xs text-muted-foreground">Online</span>
+                        <CardHeader className="flex-row items-center justify-between border-b">
+                            <div className="flex items-center gap-4">
+                                <Avatar>
+                                    <AvatarFallback><Bot/></AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <CardTitle className="font-headline text-lg">AI Assistant</CardTitle>
+                                    <div className="flex items-center gap-1.5">
+                                        {isOnline ? <Wifi className="h-4 w-4 text-green-500" /> : <WifiOff className="h-4 w-4 text-red-500" />}
+                                        <span className="text-xs text-muted-foreground">{isOnline ? 'Online' : 'Offline'}</span>
+                                    </div>
                                 </div>
                             </div>
+                            <Button variant="outline" size="sm" onClick={handleScreenAnalysis} disabled={isAnalyzingScreen}>
+                                <ScreenShare className="mr-2 h-4 w-4" />
+                                {isAnalyzingScreen ? 'Analyzing...' : 'Analyze Screen'}
+                            </Button>
                         </CardHeader>
                         <CardContent className="p-0 flex-grow">
                              <ScrollArea className="h-[calc(100vh-25rem)] p-6" ref={scrollAreaRef}>
                                 <div className="space-y-6">
                                     {messages.map(message => (
-                                        <div key={message.id} className={cn("flex items-end gap-2", message.sender === 'user' ? 'justify-end' : 'justify-start')}>
-                                            {message.sender === 'ai' && <Avatar className="h-8 w-8"><AvatarFallback><Bot/></AvatarFallback></Avatar>}
-                                            <div className={cn("max-w-md rounded-2xl p-3", message.sender === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none')}>
+                                        <div key={message.id} className={cn("flex items-start gap-3", message.sender === 'user' ? 'justify-end' : 'justify-start')}>
+                                            {message.sender === 'ai' && <Avatar className="h-8 w-8 border"><AvatarFallback><Bot className="h-4 w-4"/></AvatarFallback></Avatar>}
+                                            <div className={cn("max-w-md rounded-2xl p-3 shadow-sm", message.sender === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none')}>
                                                 {message.isThinking ? (
-                                                     <div className="flex items-center gap-2">
+                                                     <div className="flex items-center gap-2 p-2">
                                                         <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                                                         <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                                                         <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce"></div>
                                                     </div>
-                                                ) : <p>{message.text}</p>
+                                                ) : <p className="text-sm">{message.text}</p>
                                                 }
-                                                {!message.isThinking && <p className={cn("text-xs mt-1", message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{message.timestamp}</p>}
+                                                {!message.isThinking && <p className={cn("text-xs mt-2 text-right", message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{message.timestamp}</p>}
                                             </div>
-                                             {message.sender === 'user' && <Avatar className="h-8 w-8"><AvatarFallback>U</AvatarFallback></Avatar>}
+                                             {message.sender === 'user' && <Avatar className="h-8 w-8 border"><AvatarFallback><User className="h-4 w-4"/></AvatarFallback></Avatar>}
                                         </div>
                                     ))}
                                 </div>
                             </ScrollArea>
                         </CardContent>
-                        <div className="p-4 border-t flex justify-center items-center h-32">
+                        <div className="p-4 border-t flex justify-center items-center h-32 bg-background/50">
                            <VoiceWidget
                              onListen={setIsListening}
                              onResult={handleSend}
                              state={voiceState}
+                             disabled={!isOnline}
                            />
                         </div>
                     </Card>
@@ -237,3 +295,5 @@ export default function ConversationPage() {
         </div>
     );
 }
+
+    
