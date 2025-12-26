@@ -64,7 +64,7 @@ export default function Home() {
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Build Smarter, Sell Faster, Support Instantly</h2>
             <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">A platform designed to translate your challenges into actionable, AI-driven solutions.</p>
           </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {capabilities.map((capability, index) => (
               <Card key={index} className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
                 <CardHeader className="flex flex-row items-center gap-4 pb-4">
@@ -193,6 +193,12 @@ export default function Home() {
                   <p className="font-body text-muted-foreground">Leverage our marketplace for fair revenue sharing and reach a growing user base.</p>
                 </CardContent>
               </Card>
+          </div>
+          <div className="text-center mt-12">
+              <h3 className="text-2xl font-headline mb-4">Ready to Partner with Us?</h3>
+              <Button size="lg">
+                Contact Us <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
           </div>
         </div>
       </section>
