@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Search, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
@@ -165,19 +165,19 @@ export default function Home() {
       <section id="community" className="py-16 md:py-24 bg-background dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Innovate & Partner with LOG_ON</h2>
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Innovate &amp; Partner with LOG_ON</h2>
             <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Join our ecosystem of creators and build the future of autonomous business.</p>
           </div>
-          <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3 max-w-4xl mx-auto">
-              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5">
+          <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-2 gap-8 max-w-6xl mx-auto">
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 lg:col-span-2">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">Become a Creator</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-body text-muted-foreground">Build, publish, and monetize your AI agents & automations on LOG_ON.</p>
+                  <p className="font-body text-muted-foreground">Build, publish, and monetize your AI agents &amp; automations on the LOG_ON platform. Reach a global audience and contribute to the future of AI-driven business solutions.</p>
                 </CardContent>
               </Card>
-              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:100ms]">
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:100ms] row-start-2 lg:row-start-auto">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">Submit Your Solutions</CardTitle>
                 </CardHeader>
@@ -193,16 +193,17 @@ export default function Home() {
                   <p className="font-body text-muted-foreground">Leverage our marketplace for fair revenue sharing and reach a growing user base.</p>
                 </CardContent>
               </Card>
-          </div>
-          <div className="text-center mt-12">
-              <h3 className="text-2xl font-headline mb-4">Ready to Partner with Us?</h3>
-              <Button size="lg">
-                Contact Us <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+              <Card className="transform transition-transform duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-5 [animation-delay:300ms] bg-primary/10 flex flex-col items-center justify-center text-center p-8">
+                  <Rocket className="h-12 w-12 text-primary mb-4" />
+                  <h3 className="font-headline text-xl font-semibold mb-2">Ready to Launch?</h3>
+                  <p className="font-body text-muted-foreground mb-4">Join us today.</p>
+                  <Button>Contact Us</Button>
+              </Card>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
+
+    
