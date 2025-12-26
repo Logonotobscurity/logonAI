@@ -97,7 +97,7 @@ export default function Header() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpe ? <X /> : <Menu />}
+            {isMenuOpen ? <X /> : <Menu />}
             <span className="sr-only">Toggle Menu</span>
           </button>
         </div>
