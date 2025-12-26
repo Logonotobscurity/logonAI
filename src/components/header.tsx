@@ -62,6 +62,13 @@ const navLinks = [
         { title: "Vendor Marketplace", href: "/vendors", description: "Discover certified integration partners." },
     ]
   },
+  { 
+    title: "Developers", 
+    href: "/developer",
+    description: "Build on the LOG_ON platform with our APIs and tools.",
+    icon: <Search className="h-5 w-5" />,
+    subItems: []
+  },
 ];
 
 export default function Header() {
@@ -170,10 +177,6 @@ export default function Header() {
             {user ? (
             <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)}>
-                    <Settings className="h-5 w-5" />
-                    <span className="sr-only">Settings</span>
-                </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -282,7 +285,7 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col items-center space-y-4 py-4 border-t">
-            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }].map((link) => (
+            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace", description: "" }, { title: "Vendor Marketplace", href: "/vendors", description: "" }, {title: "Developers", href: "/developer", description: ""}].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -331,5 +334,3 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
-
-    
