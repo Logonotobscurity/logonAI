@@ -24,6 +24,22 @@ import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/firebase";
+import { cn } from "@/lib/utils";
+
+const activityIconClassMap = {
+    Assessment: {
+        bg: "bg-primary/10",
+        text: "text-primary",
+    },
+    Marketplace: {
+        bg: "bg-secondary/10",
+        text: "text-secondary-foreground",
+    },
+    Conversation: {
+        bg: "bg-accent/10",
+        text: "text-accent-foreground",
+    }
+};
 
 export default function DashboardPage() {
   useAuth();
@@ -126,20 +142,23 @@ export default function DashboardPage() {
                              <Card>
                                 <CardContent className="p-0">
                                     <ul className="divide-y">
-                                        {activityFeed.map((activity, index) => (
-                                            <li key={index} className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                                                <div className="flex items-center gap-3">
-                                                  <div className={`p-2 rounded-full bg-${activity.type === 'Assessment' ? 'primary' : 'secondary'}/10`}>
-                                                    <activity.icon className={`h-5 w-5 text-${activity.type === 'Assessment' ? 'primary' : 'secondary-foreground'}`}/>
-                                                  </div>
-                                                  <div>
-                                                    <p>{activity.description}</p>
-                                                    <p className="text-sm text-muted-foreground">{activity.time}</p>
-                                                  </div>
-                                                </div>
-                                                <Button variant="ghost" size="sm"><LinkIcon className="h-4 w-4 mr-2"/>View</Button>
-                                            </li>
-                                        ))}
+                                        {activityFeed.map((activity, index) => {
+                                            const classNames = activityIconClassMap[activity.type as keyof typeof activityIconClassMap] || activityIconClassMap.Conversation;
+                                            return (
+                                                <li key={index} className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                                    <div className="flex items-center gap-3">
+                                                      <div className={cn("p-2 rounded-full", classNames.bg)}>
+                                                        <activity.icon className={cn("h-5 w-5", classNames.text)}/>
+                                                      </div>
+                                                      <div>
+                                                        <p>{activity.description}</p>
+                                                        <p className="text-sm text-muted-foreground">{activity.time}</p>
+                                                      </div>
+                                                    </div>
+                                                    <Button variant="ghost" size="sm"><LinkIcon className="h-4 w-4 mr-2"/>View</Button>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                 </CardContent>
                              </Card>
@@ -167,3 +186,5 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
+
+    
