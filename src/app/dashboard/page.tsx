@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -44,6 +45,7 @@ export default function DashboardPage() {
   useAuth();
   const { user } = useUser();
   const featuredAgents = agents.slice(0,2);
+  
   return (
     <SidebarProvider>
       <div className="flex min-h-screen bg-secondary/30">

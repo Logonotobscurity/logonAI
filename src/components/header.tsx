@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -14,8 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useUser } from "@/firebase";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { useUser, getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "@/firebase";
 
 
 const navLinks = [
@@ -26,11 +26,10 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, firebaseApp } = useUser();
+  const { user, auth } = useUser();
 
   const handleGoogleSignIn = async () => {
-    if (!firebaseApp) return;
-    const auth = getAuth(firebaseApp);
+    if (!auth) return;
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
@@ -40,8 +39,7 @@ export default function Header() {
   };
 
   const handleSignOut = async () => {
-    if (!firebaseApp) return;
-    const auth = getAuth(firebaseApp);
+    if (!auth) return;
     try {
       await signOut(auth);
     } catch (error) {
@@ -99,7 +97,7 @@ export default function Header() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X /> : <Menu />}
+            {isMenuOpe ? <X /> : <Menu />}
             <span className="sr-only">Toggle Menu</span>
           </button>
         </div>
@@ -122,6 +120,9 @@ export default function Header() {
                 {link.title}
               </Link>
             ))}
+             <div className="w-full px-4">
+               <Button onClick={handleGoogleSignIn} className="w-full">Login / Register</Button>
+            </div>
           </div>
         </div>
       )}
