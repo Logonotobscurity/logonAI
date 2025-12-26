@@ -215,7 +215,7 @@ export default function DashboardPage() {
                     <div className="lg:col-span-2 space-y-8">
                         <section>
                             <h3 className="text-xl font-semibold font-headline mb-4">Quick Actions</h3>
-                            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 {quickActions.map(action => (
                                      <Link href={action.href} key={action.title} className="block">
                                         <Card className="hover:bg-muted/50 transition-colors h-full">

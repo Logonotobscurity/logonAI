@@ -16,7 +16,6 @@ import { VoiceWidget } from "@/components/voice-widget";
 import type { AiDrivenMatchingOutput } from "@/ai/schemas";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { CameraFeed } from "@/components/camera-feed";
 
@@ -82,7 +81,8 @@ export default function ConversationPage() {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const { reasoning, agentSuggestions }: AiDrivenMatchingOutput = await response.json();
+            const result: AiDrivenMatchingOutput = await response.json();
+            const { reasoning, agentSuggestions } = result;
             
             const aiResponseMessage: Message = {
                 id: aiThinkingMessageId,
@@ -92,6 +92,8 @@ export default function ConversationPage() {
             };
             
             setMessages(prev => prev.map(m => m.id === aiThinkingMessageId ? aiResponseMessage : m));
+            thinkingMessageIdRef.current = null;
+
 
             if (typeof window !== 'undefined' && window.speechSynthesis) {
                 const utterance = new SpeechSynthesisUtterance(reasoning);
@@ -110,13 +112,15 @@ export default function ConversationPage() {
         } catch (error) {
             console.error(error);
             const errorText = 'Sorry, I encountered an error. Please try again.';
+            const errorId = thinkingMessageIdRef.current || `${Date.now()}-error`;
             const errorResponse: Message = {
-                id: thinkingMessageIdRef.current || `${Date.now()}-error`,
+                id: errorId,
                 sender: 'ai',
                 text: errorText,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            setMessages(prev => prev.map(m => m.id === errorResponse.id ? errorResponse : m));
+            setMessages(prev => prev.map(m => m.id === errorId ? errorResponse : m));
+            thinkingMessageIdRef.current = null;
             
             if (typeof window !== 'undefined' && window.speechSynthesis) {
                 const utterance = new SpeechSynthesisUtterance(errorText);
@@ -182,8 +186,9 @@ export default function ConversationPage() {
         setShowCamera(false);
         setIsAnalyzingScreen(false);
 
+        const analysisMessageId = `${Date.now()}-analysis`;
         const analysisMessage: Message = {
-            id: `${Date.now()}-analysis`,
+            id: analysisMessageId,
             sender: 'ai',
             isThinking: true,
             text: 'Analyzing screen content...',
@@ -194,12 +199,12 @@ export default function ConversationPage() {
         setTimeout(() => {
             const resultText = "Based on the content of your screen, I suggest we look into optimizing your customer support workflow. Would you like to explore agents that specialize in that area?";
             const resultMessage: Message = {
-                id: analysisMessage.id,
+                id: analysisMessageId,
                 sender: 'ai',
                 text: resultText,
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
-            setMessages(prev => prev.map(m => m.id === analysisMessage.id ? resultMessage : m));
+            setMessages(prev => prev.map(m => m.id === analysisMessageId ? resultMessage : m));
             if (typeof window !== 'undefined' && window.speechSynthesis) {
                 const utterance = new SpeechSynthesisUtterance(resultText);
                 utterance.onstart = () => setIsSpeaking(true);
@@ -236,7 +241,7 @@ export default function ConversationPage() {
                         </CardHeader>
                         <CardContent className="p-0 flex-grow relative">
                             {showCamera && <CameraFeed onClose={handleCameraClose} />}
-                             <ScrollArea className="h-[calc(100vh-25rem)] p-6" ref={scrollAreaRef}>
+                             <ScrollArea className="h-[calc(100vh-22rem)] p-6" ref={scrollAreaRef}>
                                 <div className="space-y-6">
                                     {messages.map(message => (
                                         <div key={message.id} className={cn("flex items-start gap-3", message.sender === 'user' ? 'justify-end' : 'justify-start')}>

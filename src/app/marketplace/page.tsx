@@ -11,6 +11,7 @@ import { Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -171,3 +172,5 @@ export default function MarketplacePage() {
     </div>
   );
 }
+
+    
