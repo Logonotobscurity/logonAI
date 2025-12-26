@@ -29,7 +29,7 @@ export default function RootLayout({
         />
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=Belleza&display=swap" rel="stylesheet" />
       </head>
-      <body className={cn('min-h-screen bg-background font-body antialiased')} suppressHydrationWarning={true}>
+      <body className={cn('min-h-screen bg-background font-body antialiased flex flex-col')} suppressHydrationWarning={true}>
         <UserProvider>
             <PageWrapper>
                 {children}

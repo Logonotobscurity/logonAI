@@ -24,7 +24,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
       <div className="container mx-auto max-w-5xl py-12 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
-            <Card className="sticky top-24 overflow-hidden">
+            <Card className="md:sticky md:top-24 overflow-hidden">
               <CardHeader className="p-6 items-center text-center">
                  <Avatar className="w-32 h-32 border-4 border-background bg-background z-10">
                     <AvatarImage src={agent.avatar} alt={agent.name} />
@@ -51,7 +51,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
               </CardContent>
             </Card>
           </div>
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 space-y-8">
             <Card>
                 <CardHeader>
                     <CardTitle className="font-headline text-2xl">About {agent.name}</CardTitle>
@@ -61,7 +61,7 @@ export default function AgentDetailPage({ params }: { params: { id: string } }) 
                 </CardContent>
             </Card>
 
-            <Card className="mt-8">
+            <Card>
                 <CardHeader>
                     <CardTitle className="font-headline text-2xl">Ratings & Reviews</CardTitle>
                 </CardHeader>

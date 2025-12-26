@@ -44,11 +44,11 @@ export default function DashboardPage() {
                     <p className="text-muted-foreground">Good to see you again. Ready to explore?</p>
                 </div>
 
-                <div className="grid gap-8 lg:grid-cols-3">
+                <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
                     <div className="lg:col-span-2 space-y-8">
                         <section>
                             <h3 className="text-xl font-semibold font-headline mb-4">Quick Actions</h3>
-                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                                 {quickActions.map(action => (
                                      <Link href={action.href} key={action.title} className="block">
                                         <Card className="hover:bg-muted/50 transition-colors h-full">
@@ -91,7 +91,7 @@ export default function DashboardPage() {
                              </Card>
                         </section>
                     </div>
-                    <div className="lg:col-span-1">
+                    <div className="lg:col-span-1 space-y-8">
                         <section>
                             <Card className="bg-background">
                                 <CardHeader>

@@ -18,6 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { CameraFeed } from "@/components/camera-feed";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function ConversationPage() {
     const searchParams = useSearchParams();
@@ -32,6 +34,7 @@ export default function ConversationPage() {
     const [textInput, setTextInput] = useState("");
     const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice');
     const [showCamera, setShowCamera] = useState(false);
+    const isMobile = useIsMobile();
     
     const { toast } = useToast();
     const thinkingMessageIdRef = useRef<string | null>(null);
@@ -216,135 +219,160 @@ export default function ConversationPage() {
     
     const voiceState = isListening ? 'listening' : isSpeaking ? 'speaking' : 'idle';
 
-    return (
-        <div className="container mx-auto py-8">
-             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-10rem)]">
-                <div className="lg:col-span-2 flex flex-col h-full">
-                    <Card className="flex-grow flex flex-col">
-                        <CardHeader className="flex-row items-center justify-between border-b">
-                            <div className="flex items-center gap-4">
-                                <Avatar>
-                                    <AvatarFallback><Bot/></AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <CardTitle className="font-headline text-lg">AI Assistant</CardTitle>
-                                    <div className="flex items-center gap-1.5">
-                                        {isOnline ? <Wifi className="h-4 w-4 text-green-500" /> : <WifiOff className="h-4 w-4 text-red-500" />}
-                                        <span className="text-xs text-muted-foreground">{isOnline ? 'Online' : 'Offline'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <Button variant="outline" size="sm" onClick={handleScreenAnalysis} disabled={isAnalyzingScreen}>
-                                <ScreenShare className="mr-2 h-4 w-4" />
-                                {isAnalyzingScreen ? 'Analyzing...' : 'Analyze Screen'}
-                            </Button>
-                        </CardHeader>
-                        <CardContent className="p-0 flex-grow relative">
-                            {showCamera && <CameraFeed onClose={handleCameraClose} />}
-                             <ScrollArea className="h-[calc(100vh-22rem)] p-6" ref={scrollAreaRef}>
-                                <div className="space-y-6">
-                                    {messages.map(message => (
-                                        <div key={message.id} className={cn("flex items-start gap-3", message.sender === 'user' ? 'justify-end' : 'justify-start')}>
-                                            {message.sender === 'ai' && <Avatar className="h-8 w-8 border"><AvatarFallback><Bot className="h-4 w-4"/></AvatarFallback></Avatar>}
-                                            <div className={cn("max-w-md rounded-2xl p-3 shadow-sm", message.sender === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none')}>
-                                                {message.isThinking ? (
-                                                     <div className="flex items-center gap-2 p-2">
-                                                        <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                                        <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                                        <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce"></div>
-                                                    </div>
-                                                ) : <p className="text-sm">{message.text}</p>
-                                                }
-                                                {!message.isThinking && <p className={cn("text-xs mt-2 text-right", message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{message.timestamp}</p>}
-                                            </div>
-                                             {message.sender === 'user' && <Avatar className="h-8 w-8 border"><AvatarFallback><User className="h-4 w-4"/></AvatarFallback></Avatar>}
-                                        </div>
-                                    ))}
-                                </div>
-                            </ScrollArea>
-                        </CardContent>
-                        <div className="p-4 border-t flex flex-col justify-center items-center h-48 bg-background/50">
-                            <div className="flex items-center space-x-2 mb-4">
-                                <Mic className="w-5 h-5 text-muted-foreground" />
-                                <Switch
-                                    id="input-mode"
-                                    checked={inputMode === 'text'}
-                                    onCheckedChange={(checked) => setInputMode(checked ? 'text' : 'voice')}
-                                    />
-                                <Keyboard className="w-5 h-5 text-muted-foreground" />
-                            </div>
-                           
-                           {inputMode === 'voice' ? (
-                            <VoiceWidget
-                                onListen={setIsListening}
-                                onResult={handleSend}
-                                state={voiceState}
-                                disabled={!isOnline}
-                            />
-                           ) : (
-                            <div className="w-full flex items-center gap-2 px-4">
-                                <Textarea 
-                                    placeholder="Type your message here..."
-                                    className="flex-1 resize-none"
-                                    value={textInput}
-                                    onChange={(e) => setTextInput(e.target.value)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !e.shiftKey) {
-                                            e.preventDefault();
-                                            handleSend(textInput);
-                                        }
-                                    }}
-                                />
-                                <Button onClick={() => handleSend(textInput)} disabled={!textInput.trim()}>
-                                    <Send className="h-4 w-4"/>
-                                    <span className="sr-only">Send</span>
-                                </Button>
-                            </div>
-                           )}
+    const ChatPanel = () => (
+         <Card className="flex-grow flex flex-col h-full">
+            <CardHeader className="flex-row items-center justify-between border-b">
+                <div className="flex items-center gap-4">
+                    <Avatar>
+                        <AvatarFallback><Bot/></AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <CardTitle className="font-headline text-lg">AI Assistant</CardTitle>
+                        <div className="flex items-center gap-1.5">
+                            {isOnline ? <Wifi className="h-4 w-4 text-green-500" /> : <WifiOff className="h-4 w-4 text-red-500" />}
+                            <span className="text-xs text-muted-foreground">{isOnline ? 'Online' : 'Offline'}</span>
                         </div>
-                    </Card>
+                    </div>
                 </div>
-                <div className="lg:col-span-1">
-                    <Card className="h-full">
-                        <CardHeader>
-                            <CardTitle className="font-headline">Context Sidebar</CardTitle>
-                            <CardDescription>Relevant assessments and suggested agents.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div>
-                                <h3 className="font-semibold mb-2 flex items-center gap-2"><FileText className="h-5 w-5"/> Related Assessments</h3>
-                                <ul className="space-y-2">
-                                    <li className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                                        <span>AI Readiness</span>
-                                         <Link href="/assessment">
-                                            <Button variant="outline" size="sm">Take Now</Button>
-                                        </Link>
-                                    </li>
-                                </ul>
+                <Button variant="outline" size="sm" onClick={handleScreenAnalysis} disabled={isAnalyzingScreen}>
+                    <ScreenShare className="mr-2 h-4 w-4" />
+                    {isAnalyzingScreen ? 'Analyzing...' : 'Analyze Screen'}
+                </Button>
+            </CardHeader>
+            <CardContent className="p-0 flex-grow relative">
+                {showCamera && <CameraFeed onClose={handleCameraClose} />}
+                    <ScrollArea className="h-[calc(100vh-22rem)] md:h-[calc(100vh-24rem)] p-6" ref={scrollAreaRef}>
+                    <div className="space-y-6">
+                        {messages.map(message => (
+                            <div key={message.id} className={cn("flex items-start gap-3", message.sender === 'user' ? 'justify-end' : 'justify-start')}>
+                                {message.sender === 'ai' && <Avatar className="h-8 w-8 border"><AvatarFallback><Bot className="h-4 w-4"/></AvatarFallback></Avatar>}
+                                <div className={cn("max-w-md rounded-2xl p-3 shadow-sm", message.sender === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none')}>
+                                    {message.isThinking ? (
+                                            <div className="flex items-center gap-2 p-2">
+                                            <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                            <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                            <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce"></div>
+                                        </div>
+                                    ) : <p className="text-sm">{message.text}</p>
+                                    }
+                                    {!message.isThinking && <p className={cn("text-xs mt-2 text-right", message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground')}>{message.timestamp}</p>}
+                                </div>
+                                    {message.sender === 'user' && <Avatar className="h-8 w-8 border"><AvatarFallback><User className="h-4 w-4"/></AvatarFallback></Avatar>}
                             </div>
-                            <div>
-                                <h3 className="font-semibold mb-2 flex items-center gap-2"><Briefcase className="h-5 w-5"/> Suggested Agents</h3>
-                                {suggestedAgents.length > 0 ? (
-                                <ul className="space-y-2">
-                                     {suggestedAgents.map((agent) => (
-                                     <li key={agent.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                                        <span className="truncate">{agent.name}</span>
-                                        <Link href={`/agent/${agent.id}`}>
-                                            <Button variant="outline" size="sm">View</Button>
-                                        </Link>
-                                    </li>
-                                     ))}
-                                </ul>
-                                ) : (
-                                    <p className="text-sm text-muted-foreground">No agent suggestions yet. Describe your needs to get started.</p>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
+                        ))}
+                    </div>
+                </ScrollArea>
+            </CardContent>
+            <div className="p-4 border-t flex flex-col justify-center items-center h-48 bg-background/50">
+                <div className="flex items-center space-x-2 mb-4">
+                    <Mic className="w-5 h-5 text-muted-foreground" />
+                    <Switch
+                        id="input-mode"
+                        checked={inputMode === 'text'}
+                        onCheckedChange={(checked) => setInputMode(checked ? 'text' : 'voice')}
+                        />
+                    <Keyboard className="w-5 h-5 text-muted-foreground" />
                 </div>
-             </div>
+                
+                {inputMode === 'voice' ? (
+                <VoiceWidget
+                    onListen={setIsListening}
+                    onResult={handleSend}
+                    state={voiceState}
+                    disabled={!isOnline}
+                />
+                ) : (
+                <div className="w-full flex items-center gap-2 px-4">
+                    <Textarea 
+                        placeholder="Type your message here..."
+                        className="flex-1 resize-none"
+                        value={textInput}
+                        onChange={(e) => setTextInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend(textInput);
+                            }
+                        }}
+                    />
+                    <Button onClick={() => handleSend(textInput)} disabled={!textInput.trim()}>
+                        <Send className="h-4 w-4"/>
+                        <span className="sr-only">Send</span>
+                    </Button>
+                </div>
+                )}
+            </div>
+        </Card>
+    );
+
+    const ContextPanel = () => (
+         <Card className="h-full">
+            <CardHeader>
+                <CardTitle className="font-headline">Context Sidebar</CardTitle>
+                <CardDescription>Relevant assessments and suggested agents.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div>
+                    <h3 className="font-semibold mb-2 flex items-center gap-2"><FileText className="h-5 w-5"/> Related Assessments</h3>
+                    <ul className="space-y-2">
+                        <li className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                            <span>AI Readiness</span>
+                                <Link href="/assessment">
+                                <Button variant="outline" size="sm">Take Now</Button>
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="font-semibold mb-2 flex items-center gap-2"><Briefcase className="h-5 w-5"/> Suggested Agents</h3>
+                    {suggestedAgents.length > 0 ? (
+                    <ul className="space-y-2">
+                            {suggestedAgents.map((agent) => (
+                            <li key={agent.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                            <span className="truncate">{agent.name}</span>
+                            <Link href={`/agent/${agent.id}`}>
+                                <Button variant="outline" size="sm">View</Button>
+                            </Link>
+                        </li>
+                            ))}
+                    </ul>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">No agent suggestions yet. Describe your needs to get started.</p>
+                    )}
+                </div>
+            </CardContent>
+        </Card>
+    );
+
+    return (
+        <div className="container mx-auto py-4 md:py-8 h-full">
+            {isMobile ? (
+                <Tabs defaultValue="chat" className="w-full h-full flex flex-col">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="chat">Chat</TabsTrigger>
+                        <TabsTrigger value="context">Context</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="chat" className="flex-grow">
+                        <div className="h-full">
+                          <ChatPanel />
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="context" className="flex-grow">
+                         <div className="h-full">
+                          <ContextPanel />
+                         </div>
+                    </TabsContent>
+                </Tabs>
+            ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-8rem)]">
+                    <div className="lg:col-span-2 flex flex-col h-full">
+                       <ChatPanel />
+                    </div>
+                    <div className="lg:col-span-1">
+                        <ContextPanel />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
-
-    

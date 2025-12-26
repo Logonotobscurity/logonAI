@@ -32,7 +32,7 @@ export default function Home() {
       <section className="relative bg-background dark:bg-gray-900 w-full">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
         <div className="container mx-auto max-w-screen-xl px-4 py-20 lg:py-32 text-center">
-            <h1 className="mb-4 font-headline text-5xl font-extrabold leading-tight tracking-tighter md:text-6xl xl:text-7xl">
+            <h1 className="mb-4 font-headline text-4xl sm:text-5xl font-extrabold leading-tight tracking-tighter md:text-6xl xl:text-7xl">
               Identify Your Next Growth Opportunity with AI.
             </h1>
             <p className="mb-8 max-w-3xl mx-auto font-body text-lg text-muted-foreground md:text-xl lg:text-2xl">
@@ -42,7 +42,7 @@ export default function Home() {
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="text"
-                    placeholder="Describe your business challenge or upload a document..."
+                    placeholder="Describe your business challenge..."
                     className="h-16 rounded-full border-2 pl-14 pr-24 text-lg shadow-lg"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -200,5 +200,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
