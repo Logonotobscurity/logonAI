@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -263,7 +264,7 @@ export default function DashboardPage() {
                                 <CardHeader>
                                     <CardTitle className="text-xl font-headline">Suggested For You</CardTitle>
                                     <CardDescription>Based on your recent activity.</CardDescription>
-                                </Header>
+                                </CardHeader>
                                 <CardContent className="space-y-4">
                                   {featuredAgents.map((agent) => (
                                     <AgentCard key={agent.id} agent={agent} />
@@ -279,3 +280,5 @@ export default function DashboardPage() {
     </SidebarProvider>
   );
 }
+
+    
