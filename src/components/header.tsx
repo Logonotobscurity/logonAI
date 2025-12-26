@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -7,13 +6,6 @@ import { Logo } from "./logo";
 import { Menu, X, ChevronDown, Settings, Info, Search, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,12 +17,48 @@ import { MarketplaceIcon, VendorsIcon } from "./icons";
 import { useRouter, usePathname } from "next/navigation";
 import { industryCategories } from "@/lib/mock-data";
 import { Badge } from "./ui/badge";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "./ui/navigation-menu";
 
 
 const navLinks = [
-  { title: "Features", href: "/#features" },
-  { title: "Assessments", href: "/assessment" },
-  { title: "Modeler", href: "/modeler" },
+  { 
+    title: "Features", 
+    href: "/#features",
+    description: "Explore the core capabilities of the LOG_ON platform.",
+    icon: <Search className="h-5 w-5" />,
+    subItems: [
+      { title: "AI-Driven Strategy", href: "/#features", description: "Let AI identify your next growth vector." },
+      { title: "Expert Marketplace", href: "/marketplace", description: "Connect with vetted AI professionals." },
+      { title: "Workflow Automation", href: "/assessment", description: "Optimize your business processes." },
+    ]
+  },
+  { 
+    title: "Assessments", 
+    href: "/assessment",
+    description: "Measure your AI readiness and identify opportunities.",
+    icon: <Search className="h-5 w-5" />,
+    subItems: [
+        { title: "AI Readiness Evaluator", href: "/assessment", description: "See if you are ready for AI." },
+        { title: "Workflow Automation Audit", href: "/assessment", description: "Find bottlenecks to automate." },
+    ]
+  },
+  { 
+    title: "Modeler", 
+    href: "/modeler",
+    description: "Design and visualize business processes with BPMN 2.0.",
+    icon: <Search className="h-5 w-5" />,
+    subItems: []
+  },
+  { 
+    title: "Connect",
+    href: "#",
+    description: "Engage with our ecosystem of agents and vendors.",
+    icon: <Search className="h-5 w-5" />,
+    subItems: [
+        { title: "Agent Marketplace", href: "/marketplace", description: "Hire AI agents to automate tasks." },
+        { title: "Vendor Marketplace", href: "/vendors", description: "Discover certified integration partners." },
+    ]
+  },
 ];
 
 export default function Header() {
@@ -77,38 +105,39 @@ export default function Header() {
           </Link>
           
           {!isDashboard && (
-            <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="transition-colors hover:text-primary"
-                >
-                  {link.title}
-                </Link>
-              ))}
-               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-1">
-                    Connect
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-60">
-                  <DropdownMenuItem asChild>
-                    <Link href="/marketplace">
-                      <MarketplaceIcon className="mr-2" />
-                      Agent Marketplace
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors">
-                      <VendorsIcon className="mr-2" />
-                      Vendor Marketplace
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
+               <NavigationMenu>
+                <NavigationMenuList>
+                  {navLinks.map((link) => (
+                    <NavigationMenuItem key={link.title}>
+                       {link.subItems && link.subItems.length > 0 ? (
+                        <>
+                          <NavigationMenuTrigger>{link.title}</NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                                {link.subItems.map((item) => (
+                                    <ListItem
+                                        key={item.title}
+                                        title={item.title}
+                                        href={item.href}
+                                    >
+                                        {item.description}
+                                    </ListItem>
+                                ))}
+                            </ul>
+                          </NavigationMenuContent>
+                        </>
+                      ) : (
+                        <Link href={link.href} legacyBehavior passHref>
+                          <NavigationMenuLink className={cn("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus:outline-none focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2", "bg-transparent")}>
+                            {link.title}
+                          </NavigationMenuLink>
+                        </Link>
+                      )}
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
             </nav>
           )}
 
@@ -137,29 +166,35 @@ export default function Header() {
 
             {user ? (
             <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.photoURL!} alt={user.displayName!} />
-                      <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuItem>
-                      <Link href="/dashboard" className="w-full">Dashboard</Link>
-                  </DropdownMenuItem>
-                   <DropdownMenuItem onSelect={() => setIsSettingsOpen(true)}>
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)}>
+                    <Settings className="h-5 w-5" />
+                    <span className="sr-only">Settings</span>
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.photoURL!} alt={user.displayName!} />
+                        <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuItem>
+                        <Link href="/dashboard" className="w-full">Dashboard</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem onSelect={() => setIsSettingsOpen(true)}>
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <DialogContent>
                   <DialogHeader>
                       <DialogTitle>Advanced Settings</DialogTitle>
@@ -216,7 +251,7 @@ export default function Header() {
                           <h4 className="font-medium">Keyboard Shortcuts</h4>
                           <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
                               <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">M</kbd> - Start a new Conversation</li>
-                              <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">S</kbd> - Analyze Screen</li>
+                              <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">S</kbd> - Analyze Screen</li>
                               <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">,</kbd> - Open Settings</li>
                           </ul>
                       </div>
@@ -244,7 +279,7 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col items-center space-y-4 py-4 border-t">
-            {[...navLinks, { title: "Dashboard", href: "/dashboard" }].map((link) => (
+            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -267,3 +302,29 @@ export default function Header() {
     </header>
   );
 }
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  )
+})
+ListItem.displayName = "ListItem"
