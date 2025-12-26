@@ -6,12 +6,10 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Home, BarChart, Users, MessageCircle, Settings, LogOut, Search, Bell, Link as LinkIcon, Workflow, Briefcase } from "lucide-react";
+import { Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
-import { Logo } from "@/components/logo";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
 import { cn } from "@/lib/utils";
@@ -40,31 +38,6 @@ export default function DashboardPage() {
 
   return (
       <div className="flex min-h-screen flex-col bg-secondary/30">
-            <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background px-4 md:px-8">
-                <div className="flex items-center gap-4">
-                    <Link href="/" className="flex items-center gap-2">
-                      <Logo />
-                      <Badge variant='secondary'>Beta</Badge>
-                    </Link>
-                </div>
-                 <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-semibold font-headline hidden sm:block">Dashboard</h1>
-                 </div>
-                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" aria-label="Search">
-                        <Search className="h-5 w-5" />
-                        <span className="sr-only">Search</span>
-                    </Button>
-                     <Button variant="ghost" size="icon" aria-label="Notifications">
-                        <Bell className="h-5 w-5" />
-                        <span className="sr-only">Notifications</span>
-                    </Button>
-                    <Avatar>
-                        <AvatarImage src={user?.photoURL || "https://placehold.co/40x40.png"} alt="User Avatar"/>
-                        <AvatarFallback>{user?.displayName?.charAt(0) || 'U'}</AvatarFallback>
-                    </Avatar>
-                </div>
-            </header>
             <main className="p-4 md:p-8 flex-1">
                 <div className="mb-8">
                     <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, {user?.displayName || 'User'}!</h2>

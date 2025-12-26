@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./logo";
-import { Menu, X, ChevronDown, Settings, Info } from "lucide-react";
+import { Menu, X, ChevronDown, Settings, Info, Search, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -22,8 +22,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useUser } from "@/firebase";
 import { MarketplaceIcon, VendorsIcon } from "./icons";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { industryCategories } from "@/lib/mock-data";
+import { Badge } from "./ui/badge";
 
 
 const navLinks = [
@@ -36,7 +37,10 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const isDashboard = pathname.startsWith('/dashboard');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -66,46 +70,71 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
-        <div className="mr-auto md:mr-4 flex items-center">
-          <Link href="/" className="mr-6">
+        <div className="mr-auto flex items-center">
+          <Link href="/" className="mr-6 flex items-center gap-2">
             <Logo />
+            {isDashboard && <Badge variant='secondary'>Beta</Badge>}
           </Link>
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="transition-colors hover:text-primary"
-              >
-                {link.title}
-              </Link>
-            ))}
-             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1">
-                  Connect
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-60">
-                <DropdownMenuItem asChild>
-                  <Link href="/marketplace">
-                    <MarketplaceIcon className="mr-2" />
-                    Agent Marketplace
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/vendors">
-                    <VendorsIcon className="mr-2" />
-                    Vendor Marketplace
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </nav>
+          
+          {!isDashboard && (
+            <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition-colors hover:text-primary"
+                >
+                  {link.title}
+                </Link>
+              ))}
+               <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center gap-1">
+                    Connect
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-60">
+                  <DropdownMenuItem asChild>
+                    <Link href="/marketplace">
+                      <MarketplaceIcon className="mr-2" />
+                      Agent Marketplace
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors">
+                      <VendorsIcon className="mr-2" />
+                      Vendor Marketplace
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </nav>
+          )}
+
         </div>
 
+         <div className="flex-1 flex justify-center">
+           {isDashboard && (
+              <h1 className="text-xl font-semibold font-headline hidden sm:block">Dashboard</h1>
+           )}
+        </div>
+
+
         <div className="flex items-center gap-4">
+            {isDashboard && (
+              <>
+                 <Button variant="ghost" size="icon" aria-label="Search">
+                    <Search className="h-5 w-5" />
+                    <span className="sr-only">Search</span>
+                </Button>
+                 <Button variant="ghost" size="icon" aria-label="Notifications">
+                    <Bell className="h-5 w-5" />
+                    <span className="sr-only">Notifications</span>
+                </Button>
+              </>
+            )}
+
             {user ? (
             <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
               <DropdownMenu>
@@ -226,7 +255,11 @@ export default function Header() {
               </Link>
             ))}
              <div className="w-full px-4">
-               <Button className="w-full" onClick={() => router.push('/dashboard')}>Login / Register</Button>
+                { user ? 
+                    <div className="w-full" /> 
+                    : 
+                    <Button className="w-full" onClick={() => router.push('/dashboard')}>Login / Register</Button>
+                }
             </div>
           </div>
         </div>
