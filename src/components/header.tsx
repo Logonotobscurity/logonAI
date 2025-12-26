@@ -1,5 +1,7 @@
+
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./logo";
@@ -17,6 +19,7 @@ import { MarketplaceIcon, VendorsIcon } from "./icons";
 import { useRouter, usePathname } from "next/navigation";
 import { industryCategories } from "@/lib/mock-data";
 import { Badge } from "./ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "./ui/navigation-menu";
 
 
@@ -328,3 +331,5 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
+
+    
