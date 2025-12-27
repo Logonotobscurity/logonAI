@@ -1,5 +1,5 @@
 
-import type { MarketplaceProduct, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceCategory, Workflow } from './types';
+import type { MarketplaceProduct, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceCategory, Workflow, FaqItem } from './types';
 import { AreaChart, Cpu, Lightbulb, Lock, Rocket, Scaling, ShieldCheck, Workflow as WorkflowIcon, BarChart, Users, MessageCircle, FileText } from "lucide-react";
 
 
@@ -538,7 +538,7 @@ export const workflows: Workflow[] = [
     },
 ];
 
-export const faqData = [
+export const faqData: FaqItem[] = [
   {
     question: "What is LOG_ON?",
     answer: "LOG_ON is a platform that helps businesses identify growth opportunities and activate intelligent solutions using AI. We connect you with AI agents and pre-built workflows to automate and optimize your operations."
@@ -556,3 +556,5 @@ export const faqData = [
     answer: "We offer comprehensive support through our help center, and customers on premium plans have access to dedicated support channels for more personalized assistance."
   }
 ];
+
+    
