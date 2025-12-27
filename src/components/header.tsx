@@ -132,7 +132,7 @@ export default function Header() {
                           </NavigationMenuContent>
                         </>
                       ) : (
-                        <Link href={link.href} legacyBehavior passHref>
+                        <Link href={link.href} passHref>
                           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                             <a>{link.title}</a>
                           </NavigationMenuLink>
@@ -328,5 +328,6 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
+
 
     
