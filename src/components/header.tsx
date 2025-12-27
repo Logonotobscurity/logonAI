@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useUser } from "@/firebase";
 import { useRouter, usePathname } from "next/navigation";
@@ -132,9 +132,9 @@ export default function Header() {
                           </NavigationMenuContent>
                         </>
                       ) : (
-                        <Link href={link.href} legacyBehavior={false} passHref>
-                          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                            {link.title}
+                        <Link href={link.href} legacyBehavior passHref>
+                          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                            <a>{link.title}</a>
                           </NavigationMenuLink>
                         </Link>
                       )}
