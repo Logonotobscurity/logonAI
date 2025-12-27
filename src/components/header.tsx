@@ -23,16 +23,6 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 
 const navLinks = [
   { 
-    title: "Studio",
-    href: "/dashboard",
-    subItems: [
-      { title: "Task Library", href: "/task-library", description: "Explore pre-built automation workflows." },
-      { title: "My Agent", href: "/dashboard?tab=agent", description: "Manage and train your personal AI agent." },
-      { title: "My Workflows", href: "/dashboard?tab=workflows", description: "View and edit your saved workflows." },
-      { title: "Integrations", href: "/dashboard?tab=integrations", description: "Connect to your third-party accounts." },
-    ]
-  },
-  { 
     title: "Assessments", 
     href: "/assessment",
     subItems: [
@@ -52,6 +42,11 @@ const navLinks = [
         { title: "Agent Marketplace", href: "/marketplace", description: "Hire AI agents to automate tasks." },
         { title: "Vendor Marketplace", href: "/vendors", description: "Discover certified integration partners." },
     ]
+  },
+  {
+    title: "Task Library",
+    href: "/task-library",
+    subItems: []
   },
   { 
     title: "Developers", 
@@ -334,3 +329,5 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
+
+    
