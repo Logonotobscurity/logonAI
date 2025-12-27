@@ -44,8 +44,8 @@ const navLinks = [
     ]
   },
   {
-    title: "Task Library",
-    href: "/task-library",
+    title: "Workflows",
+    href: "/workflows",
     subItems: []
   },
   { 
@@ -329,5 +329,3 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
-
-    

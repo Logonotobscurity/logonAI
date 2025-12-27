@@ -7,8 +7,8 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Bot, Link as LinkIcon, PlusCircle, Workflow as WorkflowIcon } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Bot, Link as LinkIcon, PlusCircle, Workflow as WorkflowIcon, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { useUser } from "@/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useWorkflowContext } from "@/context/workflow-context";
+import { Badge } from "@/components/ui/badge";
 
 const activityIconClassMap = {
     Assessment: {
@@ -103,29 +105,47 @@ function DashboardOverview() {
 }
 
 function MyWorkflowsTab() {
-    const userWorkflows: any[] = [];
+    const { userWorkflows } = useWorkflowContext();
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Your Workflows</CardTitle>
+                <CardTitle>My Workflows</CardTitle>
                 <CardDescription>
-                   You haven't created or saved any workflows yet.
+                   {userWorkflows.length > 0
+                        ? "These are the workflows you have added from the library."
+                        : "You haven't added any workflows yet."
+                    }
                 </CardDescription>
             </CardHeader>
             <CardContent>
                  {userWorkflows.length > 0 ? (
-                    <ul className="divide-y">
-                        {/* Map through user workflows here */}
-                    </ul>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {userWorkflows.map((workflow) => (
+                          <Card key={workflow.id} className="flex flex-col">
+                            <CardHeader>
+                              <CardTitle className="font-headline text-lg">{workflow.name}</CardTitle>
+                              <Badge variant="secondary" className="w-fit capitalize">{workflow.category}</Badge>
+                            </CardHeader>
+                            <CardContent className="flex-grow">
+                              <p className="text-muted-foreground text-sm">{workflow.description}</p>
+                            </CardContent>
+                            <CardFooter>
+                                <Button variant="default" className="w-full">
+                                    Run Workflow <ArrowRight className="ml-2 h-4 w-4" />
+                                </Button>
+                            </CardFooter>
+                          </Card>
+                        ))}
+                    </div>
                 ) : (
                     <div className="text-center py-16 border-2 border-dashed rounded-lg">
                          <div className="flex justify-center items-center h-16 w-16 rounded-full bg-muted mx-auto mb-4">
                              <WorkflowIcon className="h-8 w-8 text-muted-foreground" />
                         </div>
                         <h3 className="text-xl font-semibold mb-2">No Workflows Found</h3>
-                        <p className="text-muted-foreground mb-4">Get started by exploring the Task Library.</p>
+                        <p className="text-muted-foreground mb-4">Get started by exploring the Workflow Library.</p>
                         <Button variant="default" asChild>
-                            <Link href="/task-library">Explore Task Library</Link>
+                            <Link href="/workflows">Explore Workflows</Link>
                         </Button>
                     </div>
                 )}

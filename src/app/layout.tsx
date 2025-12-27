@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { UserProvider } from '@/firebase/auth/use-user';
 import { PageWrapper } from '@/components/page-wrapper';
+import { WorkflowProvider } from '@/context/workflow-context';
 
 export const metadata: Metadata = {
   title: 'LOG_ON AI Solutions Platform',
@@ -31,9 +32,11 @@ export default function RootLayout({
       </head>
       <body className={cn('min-h-screen bg-background font-body antialiased flex flex-col')} suppressHydrationWarning={true}>
         <UserProvider>
+          <WorkflowProvider>
             <PageWrapper>
                 {children}
             </PageWrapper>
+          </WorkflowProvider>
           <Toaster />
         </UserProvider>
       </body>

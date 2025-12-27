@@ -7,13 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { workflows, workflowCategories } from '@/lib/mock-data';
-import { ArrowRight, PlusCircle, Search } from 'lucide-react';
+import { ArrowRight, PlusCircle, Search, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { useWorkflowContext } from '@/context/workflow-context';
+import { useToast } from '@/hooks/use-toast';
 
-export default function TaskLibraryPage() {
+export default function WorkflowsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
+  const { userWorkflows, addUserWorkflow } = useWorkflowContext();
+  const { toast } = useToast();
 
   const filteredWorkflows = useMemo(() => {
     return workflows.filter(workflow => {
@@ -23,11 +27,23 @@ export default function TaskLibraryPage() {
     });
   }, [searchQuery, category]);
 
+  const handleUseWorkflow = (workflow: any) => {
+    addUserWorkflow(workflow);
+    toast({
+      title: "Workflow Added!",
+      description: `"${workflow.name}" has been added to My Workflows.`,
+    });
+  }
+
+  const isWorkflowAdded = (workflowId: string) => {
+    return userWorkflows.some(w => w.id === workflowId);
+  }
+
   return (
     <div className="bg-secondary/30 min-h-screen">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <section className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4">Task Library</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4">Workflow Library</h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Explore our library of pre-built workflows to automate your business processes in minutes.
           </p>
@@ -84,8 +100,21 @@ export default function TaskLibraryPage() {
                   <p className="text-muted-foreground text-sm">{workflow.description}</p>
                 </CardContent>
                 <CardFooter>
-                    <Button variant="outline" className="w-full">
-                        Use Workflow <ArrowRight className="ml-2 h-4 w-4" />
+                    <Button 
+                      variant={isWorkflowAdded(workflow.id) ? "secondary" : "outline"} 
+                      className="w-full"
+                      onClick={() => handleUseWorkflow(workflow)}
+                      disabled={isWorkflowAdded(workflow.id)}
+                    >
+                        {isWorkflowAdded(workflow.id) ? (
+                          <>
+                            <CheckCircle className="mr-2 h-4 w-4" /> Added to My Workflows
+                          </>
+                        ) : (
+                          <>
+                            Use Workflow <ArrowRight className="ml-2 h-4 w-4" />
+                          </>
+                        )}
                     </Button>
                 </CardFooter>
               </Card>
@@ -96,5 +125,3 @@ export default function TaskLibraryPage() {
     </div>
   );
 }
-
-    

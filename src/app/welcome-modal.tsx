@@ -23,7 +23,7 @@ export function WelcomeModal() {
 
   const handleExplore = () => {
     setIsOpen(false);
-    router.push('/task-library');
+    router.push('/workflows');
   };
 
   const features = [
@@ -48,7 +48,7 @@ export function WelcomeModal() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-center font-headline text-3xl">Welcome to the Task Library!</DialogTitle>
+          <DialogTitle className="text-center font-headline text-3xl">Welcome to the Workflow Library!</DialogTitle>
           <DialogDescription className="text-center text-lg">
             Automate your business operations with our new intelligent workflow library.
           </DialogDescription>
@@ -80,5 +80,3 @@ export function WelcomeModal() {
     </Dialog>
   );
 }
-
-    

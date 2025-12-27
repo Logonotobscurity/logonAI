@@ -149,7 +149,7 @@ export default function Home() {
       <section id="workflows" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
-            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Explore Our Task Library</h2>
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Explore Our Workflow Library</h2>
             <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Automate your business processes in minutes with our pre-built workflow templates.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -161,7 +161,7 @@ export default function Home() {
                 <CardContent>
                     <p className="mb-4">From marketing to operations, our workflows are designed to save you time and drive efficiency.</p>
                     <Button variant="secondary" asChild>
-                        <Link href="/task-library">Explore All Workflows</Link>
+                        <Link href="/workflows">Explore All Workflows</Link>
                     </Button>
                 </CardContent>
             </Card>
@@ -175,7 +175,7 @@ export default function Home() {
                   <p className="text-muted-foreground text-sm">{workflow.description}</p>
                 </CardContent>
                 <CardFooter>
-                  <Link href="/task-library" className="w-full">
+                  <Link href="/workflows" className="w-full">
                     <Button variant="outline" className="w-full">
                       View in Library <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -246,5 +246,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
