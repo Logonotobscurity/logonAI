@@ -80,3 +80,10 @@ export interface MarketplaceCategory {
   value: string;
   label: string;
 }
+
+export interface Workflow {
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+}

@@ -11,6 +11,7 @@ import { AgentCard } from "@/components/agent-card";
 import { assessments, agents, capabilities } from "@/lib/mock-data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { WelcomeModal } from "@/components/welcome-modal";
 
 
 export default function Home() {
@@ -29,6 +30,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col animate-in fade-in-50">
+      <WelcomeModal />
       <section className="relative bg-background dark:bg-gray-900 w-full">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent"></div>
         <div className="container mx-auto max-w-screen-xl px-4 py-20 lg:py-32 text-center">
@@ -200,4 +202,3 @@ export default function Home() {
     </div>
   );
 }
-

@@ -36,6 +36,13 @@ const navLinks = [
     ]
   },
   { 
+    title: "Workflows", 
+    href: "/workflows",
+    description: "Browse our library of pre-built automations.",
+    icon: <Search className="h-5 w-5" />,
+    subItems: []
+  },
+  { 
     title: "Assessments", 
     href: "/assessment",
     description: "Measure your AI readiness and identify opportunities.",
@@ -227,7 +234,7 @@ export default function Header() {
                            <Select defaultValue="default">
                               <SelectTrigger>
                                   <SelectValue placeholder="Select Industry Template" />
-                              </SelectTrigger>
+                              </Trigger>
                               <SelectContent>
                                   {industryCategories.map((cat) => (
                                     <SelectItem key={cat.value} value={cat.value} disabled={cat.value === 'all'}>

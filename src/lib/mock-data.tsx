@@ -1,6 +1,6 @@
 
-import type { MarketplaceProduct, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceCategory } from './types';
-import { AreaChart, Cpu, Lightbulb, Lock, Rocket, Scaling, ShieldCheck, Workflow, BarChart, Users, MessageCircle, FileText } from "lucide-react";
+import type { MarketplaceProduct, Assessment, Review, QuickAction, Activity, SuggestedAgent, Capability, MarketplaceCategory, Workflow } from './types';
+import { AreaChart, Cpu, Lightbulb, Lock, Rocket, Scaling, ShieldCheck, Workflow as WorkflowIcon, BarChart, Users, MessageCircle, FileText } from "lucide-react";
 
 
 export const customMarketplaceCategories: MarketplaceCategory[] = [
@@ -374,7 +374,7 @@ export const assessments: Assessment[] = [
     subheading: 'OPTIMIZATION',
     workflows: ['Bottleneck Identification', 'Workflow Streamlining', 'ROI Projection'],
     type: 'workflow-automation',
-    icon: <Workflow className="h-8 w-8 text-primary" />,
+    icon: <WorkflowIcon className="h-8 w-8 text-primary" />,
     description: "Benchmark your digital capabilities against industry leaders.",
     questions: [
         { id: 'q1', text: "How would you rate your company's current use of data analytics?", options: ["Non-existent", "Basic", "Intermediate", "Advanced", "Leading-edge"] },
@@ -412,4 +412,128 @@ export const assessments: Assessment[] = [
         { id: 'q3', text: "What is your primary goal for digital transformation?", options: ["Improve efficiency", "Enhance customer experience", "Innovate products/services", "Enter new markets"] },
     ]
   },
+];
+
+
+export const workflowCategories: MarketplaceCategory[] = [
+  { value: 'all', label: 'All Workflows' },
+  { value: 'general', label: 'General' },
+  { value: 'lead-generation', label: 'Lead Generation' },
+  { value: 'operations', label: 'Operations' },
+  { value: 'podcasts', label: 'Podcasts' },
+  { value: 'productivity', label: 'Productivity' },
+  { value: 'research', label: 'Research' },
+  { value: 'socials', label: 'Socials' },
+  { value: 'teach-your-agent', label: 'Teach Your Agent' },
+];
+
+export const workflows: Workflow[] = [
+    {
+        id: 'podcast-sponsor-discovery',
+        name: 'Podcast Sponsor Discovery',
+        description: 'Find potential sponsors for your podcast based on topic and audience.',
+        category: 'research'
+    },
+    {
+        id: 'youtube-to-content',
+        name: 'Turn my YouTube video into multiple content pieces',
+        description: 'Repurpose a YouTube video into blog posts, social media updates, and more.',
+        category: 'podcasts'
+    },
+    {
+        id: 'youtube-to-podcast-listings',
+        name: 'Turn my YouTube video into podcast listings',
+        description: 'Create listings for podcast directories from a YouTube video.',
+        category: 'podcasts'
+    },
+    {
+        id: 'research-podcast-guest',
+        name: 'Research my podcast guest for interviews',
+        description: 'Generate a brief on a podcast guest to prepare for an interview.',
+        category: 'podcasts'
+    },
+    {
+        id: 'agent-discovery',
+        name: 'Agent Discovery',
+        description: 'Find the right AI agent for your specific needs.',
+        category: 'default'
+    },
+    {
+        id: 'scheduled-agent-task',
+        name: 'Scheduled Agent Task',
+        description: 'Schedule an AI agent to perform a task at a specific time.',
+        category: 'default'
+    },
+    {
+        id: 'news-summaries',
+        name: 'Get news summaries for my keywords',
+        description: 'Receive daily summaries of news articles for your chosen keywords.',
+        category: 'productivity'
+    },
+    {
+        id: 'instagram-posts-from-ideas',
+        name: 'Create Instagram posts from ideas',
+        description: 'Turn your content ideas into engaging Instagram posts.',
+        category: 'socials'
+    },
+    {
+        id: 'teach-ai-from-instagram',
+        name: 'Teach my AI from an Instagram profile',
+        description: 'Train your AI assistant using the content from an Instagram profile.',
+        category: 'teach-your-agent'
+    },
+    {
+        id: 'teach-ai-from-linkedin',
+        name: 'Teach my AI from a LinkedIn profile',
+        description: 'Train your AI assistant using the content from a LinkedIn profile.',
+        category: 'teach-your-agent'
+    },
+    {
+        id: 'teach-ai-from-reddit',
+        name: 'Teach my AI from a Reddit profile',
+        description: 'Train your AI assistant using the content from a Reddit profile.',
+        category: 'teach-your-agent'
+    },
+    {
+        id: 'transcripts-to-blog-posts',
+        name: 'Turn transcripts into blog posts',
+        description: 'Convert audio or video transcripts into well-structured blog posts.',
+        category: 'productivity'
+    },
+    {
+        id: 'compare-instagram-competitors',
+        name: 'Compare my Instagram to competitors',
+        description: 'Analyze your Instagram performance against your competitors.',
+        category: 'research'
+    },
+    {
+        id: 'compare-x-competitors',
+        name: 'Compare my X to competitors',
+        description: 'Analyze your X (formerly Twitter) performance against your competitors.',
+        category: 'research'
+    },
+    {
+        id: 'find-podcast-guests-on-x',
+        name: 'Find podcast guests on X',
+        description: 'Discover potential podcast guests on X (formerly Twitter).',
+        category: 'lead-generation'
+    },
+    {
+        id: 'find-podcast-guests-on-instagram',
+        name: 'Find podcast guests on Instagram',
+        description: 'Discover potential podcast guests on Instagram.',
+        category: 'lead-generation'
+    },
+    {
+        id: 'youtube-videos-to-content',
+        name: 'Turn YouTube videos into content',
+        description: 'Repurpose your YouTube videos into various content formats.',
+        category: 'productivity'
+    },
+    {
+        id: 'teach-ai-from-x',
+        name: 'Teach my AI from an X profile',
+        description: 'Train your AI assistant using the content from an X (formerly Twitter) profile.',
+        category: 'teach-your-agent'
+    },
 ];
