@@ -15,20 +15,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useUser } from "@/firebase";
-import { MarketplaceIcon, VendorsIcon } from "./icons";
 import { useRouter, usePathname } from "next/navigation";
 import { industryCategories } from "@/lib/mock-data";
 import { Badge } from "./ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "./ui/navigation-menu";
 
-
 const navLinks = [
   { 
     title: "Features", 
     href: "/#features",
-    description: "Explore the core capabilities of the LOG_ON platform.",
-    icon: <Search className="h-5 w-5" />,
     subItems: [
       { title: "AI-Driven Strategy", href: "/#features", description: "Let AI identify your next growth vector." },
       { title: "Expert Marketplace", href: "/marketplace", description: "Connect with vetted AI professionals." },
@@ -38,15 +34,11 @@ const navLinks = [
   { 
     title: "Workflows", 
     href: "/workflows",
-    description: "Browse our library of pre-built automations.",
-    icon: <Search className="h-5 w-5" />,
     subItems: []
   },
   { 
     title: "Assessments", 
     href: "/assessment",
-    description: "Measure your AI readiness and identify opportunities.",
-    icon: <Search className="h-5 w-5" />,
     subItems: [
         { title: "AI Readiness Evaluator", href: "/assessment", description: "See if you are ready for AI." },
         { title: "Workflow Automation Audit", href: "/assessment", description: "Find bottlenecks to automate." },
@@ -55,15 +47,11 @@ const navLinks = [
   { 
     title: "Modeler", 
     href: "/modeler",
-    description: "Design and visualize business processes with BPMN 2.0.",
-    icon: <Search className="h-5 w-5" />,
     subItems: []
   },
   { 
     title: "Connect",
     href: "#",
-    description: "Engage with our ecosystem of agents and vendors.",
-    icon: <Search className="h-5 w-5" />,
     subItems: [
         { title: "Agent Marketplace", href: "/marketplace", description: "Hire AI agents to automate tasks." },
         { title: "Vendor Marketplace", href: "/vendors", description: "Discover certified integration partners." },
@@ -72,11 +60,10 @@ const navLinks = [
   { 
     title: "Developers", 
     href: "/developer",
-    description: "Build on the LOG_ON platform with our APIs and tools.",
-    icon: <Search className="h-5 w-5" />,
     subItems: []
   },
 ];
+
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -234,7 +221,7 @@ export default function Header() {
                            <Select defaultValue="default">
                               <SelectTrigger>
                                   <SelectValue placeholder="Select Industry Template" />
-                              </Trigger>
+                              </SelectTrigger>
                               <SelectContent>
                                   {industryCategories.map((cat) => (
                                     <SelectItem key={cat.value} value={cat.value} disabled={cat.value === 'all'}>
@@ -292,7 +279,7 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col items-center space-y-4 py-4 border-t">
-            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace", description: "" }, { title: "Vendor Marketplace", href: "/vendors", description: "" }, {title: "Developers", href: "/developer", description: ""}].map((link) => (
+            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }, {title: "Developers", href: "/developer"}].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -341,3 +328,5 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
+
+    
