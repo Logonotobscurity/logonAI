@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { UserProvider } from '@/firebase/auth/use-user';
 import { PageWrapper } from '@/components/page-wrapper';
 import { WorkflowProvider } from '@/context/workflow-context';
+import { AuthProvider } from '@/components/auth-provider';
 
 export const metadata: Metadata = {
   title: 'LOG_ON AI Solutions Platform',
@@ -31,14 +31,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=Belleza&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('min-h-screen bg-background font-body antialiased flex flex-col')} suppressHydrationWarning={true}>
-        <UserProvider>
+        <AuthProvider>
           <WorkflowProvider>
             <PageWrapper>
                 {children}
             </PageWrapper>
           </WorkflowProvider>
           <Toaster />
-        </UserProvider>
+        </AuthProvider>
       </body>
     </html>
   );

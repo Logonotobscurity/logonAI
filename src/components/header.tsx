@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useUser, signOut } from "@/firebase";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { industryCategories } from "@/lib/mock-data";
 import { Badge } from "./ui/badge";
@@ -68,7 +68,8 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, auth } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const router = useRouter();
   const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -95,13 +96,7 @@ export default function Header() {
 
 
   const handleSignOut = async () => {
-    if (!auth) return;
-    try {
-      await signOut(auth);
-      router.push('/');
-    } catch (error) {
-      console.error("Error signing out", error);
-    }
+    await signOut({ redirect: true, callbackUrl: '/' });
   };
 
 
@@ -181,8 +176,8 @@ export default function Header() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.photoURL!} alt={user.displayName!} />
-                        <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
+                        {user.image && <AvatarImage src={user.image} alt={user.name || ''} />}
+                        <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
@@ -265,7 +260,7 @@ export default function Header() {
               </DialogContent>
             </Dialog>
           ) : (
-             <Button onClick={() => router.push('/login')}>Login / Register</Button>
+             <Button onClick={() => router.push('/login')}>Login</Button>
           )}
 
           <button
@@ -299,7 +294,7 @@ export default function Header() {
                 { user ? 
                     <div className="w-full" /> 
                     : 
-                    <Button className="w-full" onClick={() => router.push('/login')}>Login / Register</Button>
+                    <Button className="w-full" onClick={() => router.push('/login')}>Login</Button>
                 }
             </div>
           </div>

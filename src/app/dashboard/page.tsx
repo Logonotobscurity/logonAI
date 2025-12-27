@@ -1,11 +1,6 @@
 
 "use client";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Bot, Link as LinkIcon, PlusCircle, Workflow as WorkflowIcon, ArrowRight } from "lucide-react";
@@ -13,11 +8,12 @@ import Link from "next/link";
 import { quickActions, activityFeed, agents } from "@/lib/mock-data";
 import { AgentCard } from "@/components/agent-card";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/use-auth";
-import { useUser } from "@/firebase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useWorkflowContext } from "@/context/workflow-context";
 import { Badge } from "@/components/ui/badge";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const activityIconClassMap = {
     Assessment: {
@@ -213,14 +209,28 @@ function IntegrationsTab() {
 }
 
 export default function DashboardPage() {
-  useAuth('/login');
-  const { user } = useUser();
+    const { data: session, status } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/login');
+        }
+    }, [status, router]);
+
+    if (status === 'loading' || !session) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <p>Loading...</p>
+            </div>
+        );
+    }
   
   return (
       <div className="flex min-h-screen flex-col bg-secondary/30">
             <main className="p-4 md:p-8 flex-1">
                 <div className="mb-8">
-                    <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, {user?.displayName || 'User'}!</h2>
+                    <h2 className="text-3xl font-bold font-headline mb-1">Welcome back, {session.user?.name || 'User'}!</h2>
                     <p className="text-muted-foreground">Good to see you again. Ready to explore?</p>
                 </div>
 
