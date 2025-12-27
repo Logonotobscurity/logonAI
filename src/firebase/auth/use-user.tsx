@@ -4,7 +4,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import type { User } from 'firebase/auth';
 import { initializeFirebase } from '@/firebase';
-import type { Auth, FirebaseApp } from 'firebase/auth';
+import { onAuthStateChanged, type Auth, type FirebaseApp } from 'firebase/auth';
 
 interface UserContextType {
     firebaseApp: FirebaseApp | null;
@@ -15,34 +15,6 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// Mock user for demo mode
-const demoUser: User = {
-    uid: 'demo-user-123',
-    displayName: 'Demo User',
-    email: 'demo@example.com',
-    photoURL: 'https://placehold.co/40x40/6c47ff/ffffff.png?text=D',
-    emailVerified: true,
-    isAnonymous: false,
-    metadata: {},
-    providerData: [],
-    providerId: 'demo',
-    tenantId: null,
-    delete: async () => {},
-    getIdToken: async () => 'demo-token',
-    getIdTokenResult: async () => ({
-        token: 'demo-token',
-        expirationTime: '',
-        authTime: '',
-        issuedAtTime: '',
-        signInProvider: null,
-        signInSecondFactor: null,
-        claims: {},
-    }),
-    reload: async () => {},
-    toJSON: () => ({}),
-};
-
-
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,12 +22,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { firebaseApp, auth } = initializeFirebase();
 
   useEffect(() => {
-    // In demo mode, we just set a mock user and bypass Firebase Auth.
-    setUser(demoUser);
-    setIsLoading(false);
-
-    // Original Firebase Auth logic is commented out below:
-    /*
     if (!auth) {
         setIsLoading(false);
         return;
@@ -67,7 +33,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     return () => unsubscribe();
-    */
   }, [auth]);
 
   return (

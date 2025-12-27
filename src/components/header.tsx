@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useUser } from "@/firebase";
+import { useUser, signOut } from "@/firebase";
 import { useRouter, usePathname } from "next/navigation";
 import { industryCategories } from "@/lib/mock-data";
 import { Badge } from "./ui/badge";
@@ -68,7 +68,7 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useUser();
+  const { user, auth } = useUser();
   const router = useRouter();
   const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -94,9 +94,14 @@ export default function Header() {
   }, [router]);
 
 
-  const handleSignOut = () => {
-    // In demo mode, just redirect to home
-    router.push('/');
+  const handleSignOut = async () => {
+    if (!auth) return;
+    try {
+      await signOut(auth);
+      router.push('/');
+    } catch (error) {
+      console.error("Error signing out", error);
+    }
   };
 
 
@@ -260,7 +265,7 @@ export default function Header() {
               </DialogContent>
             </Dialog>
           ) : (
-             <Button onClick={() => router.push('/dashboard')}>Login / Register</Button>
+             <Button onClick={() => router.push('/login')}>Login / Register</Button>
           )}
 
           <button
@@ -294,7 +299,7 @@ export default function Header() {
                 { user ? 
                     <div className="w-full" /> 
                     : 
-                    <Button className="w-full" onClick={() => router.push('/dashboard')}>Login / Register</Button>
+                    <Button className="w-full" onClick={() => router.push('/login')}>Login / Register</Button>
                 }
             </div>
           </div>

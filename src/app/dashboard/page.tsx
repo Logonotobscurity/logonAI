@@ -46,7 +46,7 @@ function DashboardOverview() {
                         {quickActions.map(action => (
                              <Link href={action.href} key={action.title} className="block">
                                 <Card className="hover:bg-muted/50 transition-colors h-full">
-                                    <CardContent className="p-6 flex flex-col items-center text-center">
+                                    <CardContent className="p-4 md:p-6 flex flex-col items-center text-center">
                                         <div className="p-3 bg-primary/10 rounded-full mb-2">
                                             <action.icon className="h-6 w-6 text-primary"/>
                                         </div>
@@ -213,7 +213,7 @@ function IntegrationsTab() {
 }
 
 export default function DashboardPage() {
-  useAuth();
+  useAuth('/login');
   const { user } = useUser();
   
   return (
