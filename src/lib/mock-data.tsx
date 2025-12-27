@@ -556,5 +556,3 @@ export const faqData: FaqItem[] = [
     answer: "We offer comprehensive support through our help center, and customers on premium plans have access to dedicated support channels for more personalized assistance."
   }
 ];
-
-    

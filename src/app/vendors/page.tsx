@@ -28,7 +28,7 @@ export default function VendorsPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   // For this demo, we'll reuse the same agent list for vendors
-  const vendors = useMemo(() => agents.filter(a => a.category === 'integration-services' || a.tags.includes('SIEM')), []);
+  const vendors = useMemo(() => agents.filter(a => a.category === 'integration-services'), []);
 
   const filteredVendors = useMemo(() => {
     return vendors.filter(vendor => {
@@ -175,5 +175,3 @@ export default function VendorsPage() {
     </div>
   );
 }
-
-    
