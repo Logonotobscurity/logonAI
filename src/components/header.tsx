@@ -62,6 +62,11 @@ const navLinks = [
     href: "/developer",
     subItems: []
   },
+  {
+    title: "Contact",
+    href: "/contact",
+    subItems: []
+  }
 ];
 
 
@@ -132,7 +137,7 @@ export default function Header() {
                           </NavigationMenuContent>
                         </>
                       ) : (
-                        <Link href={link.href} passHref>
+                        <Link href={link.href} legacyBehavior passHref>
                           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                             <a>{link.title}</a>
                           </NavigationMenuLink>
@@ -279,7 +284,7 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col items-center space-y-4 py-4 border-t">
-            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }, {title: "Developers", href: "/developer"}].map((link) => (
+            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }, {title: "Developers", href: "/developer"}, {title: "Contact", href: "/contact"}].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -328,6 +333,3 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
-
-
-    

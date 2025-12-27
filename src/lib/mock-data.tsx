@@ -537,3 +537,22 @@ export const workflows: Workflow[] = [
         category: 'teach-your-agent'
     },
 ];
+
+export const faqData = [
+  {
+    question: "What is LOG_ON?",
+    answer: "LOG_ON is a platform that helps businesses identify growth opportunities and activate intelligent solutions using AI. We connect you with AI agents and pre-built workflows to automate and optimize your operations."
+  },
+  {
+    question: "How do credits work?",
+    answer: "Every time a workflow runs, it uses credits based on its complexity. Your plan includes a set number of credits, and you can monitor your usage and upgrade your plan as your automation needs grow."
+  },
+  {
+    question: "Can I build a custom workflow?",
+    answer: "Absolutely. If our library doesn't have what you need, you can request a custom task or book a call with our team to design a tailored workflow for your specific business case."
+  },
+  {
+    question: "What kind of support do you offer?",
+    answer: "We offer comprehensive support through our help center, and customers on premium plans have access to dedicated support channels for more personalized assistance."
+  }
+];

@@ -87,3 +87,8 @@ export interface Workflow {
     description: string;
     category: string;
 }
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
