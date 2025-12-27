@@ -4,14 +4,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Search, Rocket } from "lucide-react";
+import { ArrowRight, Search, Rocket, Workflow } from "lucide-react";
 import Link from "next/link";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AgentCard } from "@/components/agent-card";
-import { assessments, agents, capabilities } from "@/lib/mock-data";
+import { assessments, agents, capabilities, workflows as allWorkflows } from "@/lib/mock-data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { WelcomeModal } from "@/components/welcome-modal";
+import { Badge } from "@/components/ui/badge";
 
 
 export default function Home() {
@@ -27,6 +28,8 @@ export default function Home() {
   }
 
   const featuredAgents = agents.filter(a => a.isTrending).slice(0, 6);
+  const featuredWorkflows = allWorkflows.slice(0, 5);
+
 
   return (
     <div className="flex flex-col animate-in fade-in-50">
@@ -142,8 +145,49 @@ export default function Home() {
           </Carousel>
         </div>
       </section>
+
+      <section id="workflows" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Explore Our Workflow Library</h2>
+            <p className="font-body text-muted-foreground sm:text-xl dark:text-gray-400">Automate your business processes in minutes with our pre-built workflow templates.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+             <Card className="md:col-span-3 lg:col-span-1 bg-primary text-primary-foreground flex flex-col justify-center items-center text-center p-8 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                <CardHeader>
+                    <Workflow className="h-12 w-12 mx-auto mb-4" />
+                    <CardTitle className="font-headline text-2xl">A World of Automation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="mb-4">From marketing to operations, our workflows are designed to save you time and drive efficiency.</p>
+                    <Button variant="secondary" asChild>
+                        <Link href="/workflows">Explore All Workflows</Link>
+                    </Button>
+                </CardContent>
+            </Card>
+            {featuredWorkflows.map((workflow) => (
+              <Card key={workflow.id} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">{workflow.name}</CardTitle>
+                  <Badge variant="outline" className="w-fit">{workflow.category}</Badge>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-muted-foreground">{workflow.description}</p>
+                </CardContent>
+                <CardFooter>
+                  <Link href="/workflows" className="w-full">
+                    <Button variant="outline" className="w-full">
+                      View in Library <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
       
-      <section id="marketplace" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
+      <section id="marketplace" className="py-16 md:py-24 bg-background dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Featured AI Agents</h2>
@@ -164,7 +208,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="community" className="py-16 md:py-24 bg-background dark:bg-gray-900">
+      <section id="community" className="py-16 md:py-24 bg-secondary/30 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-16">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold font-headline text-gray-900 dark:text-white">Innovate &amp; Partner with LOG_ON</h2>

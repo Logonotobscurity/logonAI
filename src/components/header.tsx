@@ -28,7 +28,7 @@ const navLinks = [
     subItems: [
       { title: "AI-Driven Strategy", href: "/#features", description: "Let AI identify your next growth vector." },
       { title: "Expert Marketplace", href: "/marketplace", description: "Connect with vetted AI professionals." },
-      { title: "Workflow Automation", href: "/assessment", description: "Optimize your business processes." },
+      { title: "Workflow Automation", href: "/workflows", description: "Optimize your business processes." },
     ]
   },
   { 
@@ -63,8 +63,8 @@ const navLinks = [
     subItems: []
   },
   {
-    title: "Contact",
-    href: "/contact",
+    title: "Community",
+    href: "/community",
     subItems: []
   }
 ];
@@ -284,7 +284,7 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col items-center space-y-4 py-4 border-t">
-            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }, {title: "Developers", href: "/developer"}, {title: "Contact", href: "/contact"}].map((link) => (
+            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }, {title: "Developers", href: "/developer"}, {title: "Community", href: "/community"}].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -333,5 +333,3 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
-
-    

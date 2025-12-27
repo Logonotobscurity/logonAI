@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { workflows, workflowCategories } from '@/lib/mock-data';
 import { ArrowRight, PlusCircle, Search } from 'lucide-react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 export default function WorkflowsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,7 +78,7 @@ export default function WorkflowsPage() {
               <Card key={workflow.id} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">{workflow.name}</CardTitle>
-                  <Badge variant="secondary" className="w-fit">{workflow.category}</Badge>
+                  <Badge variant="secondary" className="w-fit capitalize">{workflow.category}</Badge>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <p className="text-muted-foreground">{workflow.description}</p>
@@ -94,15 +95,4 @@ export default function WorkflowsPage() {
       </div>
     </div>
   );
-}
-
-// A simple badge component to be used inside this page until we have a global one
-function Badge({ children, className, variant }: { children: React.ReactNode, className?: string, variant?: string }) {
-    const baseClasses = "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
-    const variantClasses = variant === 'secondary' ? 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80';
-    return (
-        <div className={[baseClasses, variantClasses, className].join(' ')}>
-            {children}
-        </div>
-    )
 }
