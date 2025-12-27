@@ -23,18 +23,14 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 
 const navLinks = [
   { 
-    title: "Features", 
-    href: "/#features",
+    title: "Studio",
+    href: "#",
     subItems: [
-      { title: "AI-Driven Strategy", href: "/#features", description: "Let AI identify your next growth vector." },
-      { title: "Expert Marketplace", href: "/marketplace", description: "Connect with vetted AI professionals." },
-      { title: "Workflow Automation", href: "/workflows", description: "Optimize your business processes." },
+      { title: "Task Library", href: "/task-library", description: "Explore pre-built automation workflows." },
+      { title: "My Agent", href: "/my-agent", description: "Manage and train your personal AI agent." },
+      { title: "My Workflows", href: "/my-workflows", description: "View and edit your saved workflows." },
+      { title: "Integrations", href: "/integrations", description: "Connect to your third-party accounts." },
     ]
-  },
-  { 
-    title: "Workflows", 
-    href: "/workflows",
-    subItems: []
   },
   { 
     title: "Assessments", 
@@ -65,6 +61,11 @@ const navLinks = [
   {
     title: "Community",
     href: "/community",
+    subItems: []
+  },
+  {
+    title: "Contact",
+    href: "/contact",
     subItems: []
   }
 ];
@@ -284,7 +285,7 @@ export default function Header() {
           )}
         >
           <div className="flex flex-col items-center space-y-4 py-4 border-t">
-            {[...navLinks.filter(l => l.title !== 'Connect'), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }, {title: "Developers", href: "/developer"}, {title: "Community", href: "/community"}].map((link) => (
+            {[...navLinks.filter(l => !l.subItems || l.subItems.length === 0), { title: "Agent Marketplace", href: "/marketplace" }, { title: "Vendor Marketplace", href: "/vendors" }].flat().map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -333,3 +334,5 @@ const ListItem = React.forwardRef<
   )
 })
 ListItem.displayName = "ListItem"
+
+    

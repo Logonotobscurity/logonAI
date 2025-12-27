@@ -11,7 +11,7 @@ import { ArrowRight, PlusCircle, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
-export default function WorkflowsPage() {
+export default function TaskLibraryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('all');
 
@@ -27,7 +27,7 @@ export default function WorkflowsPage() {
     <div className="bg-secondary/30 min-h-screen">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <section className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4">Workflow Library</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4">Task Library</h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Explore our library of pre-built workflows to automate your business processes in minutes.
           </p>
@@ -96,3 +96,5 @@ export default function WorkflowsPage() {
     </div>
   );
 }
+
+    
