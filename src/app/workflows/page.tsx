@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { workflows, workflowCategories } from '@/lib/mock-data';
@@ -77,11 +77,11 @@ export default function WorkflowsPage() {
             {filteredWorkflows.map((workflow) => (
               <Card key={workflow.id} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                 <CardHeader>
-                  <CardTitle className="font-headline text-xl">{workflow.name}</CardTitle>
+                  <CardTitle className="font-headline text-lg">{workflow.name}</CardTitle>
                   <Badge variant="secondary" className="w-fit capitalize">{workflow.category}</Badge>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <p className="text-muted-foreground">{workflow.description}</p>
+                  <p className="text-muted-foreground text-sm">{workflow.description}</p>
                 </CardContent>
                 <CardFooter>
                     <Button variant="outline" className="w-full">

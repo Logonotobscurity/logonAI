@@ -168,11 +168,11 @@ export default function Home() {
             {featuredWorkflows.map((workflow) => (
               <Card key={workflow.id} className="flex flex-col transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                 <CardHeader>
-                  <CardTitle className="font-headline text-xl">{workflow.name}</CardTitle>
+                  <CardTitle className="font-headline text-lg">{workflow.name}</CardTitle>
                   <Badge variant="outline" className="w-fit">{workflow.category}</Badge>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <p className="text-muted-foreground">{workflow.description}</p>
+                  <p className="text-muted-foreground text-sm">{workflow.description}</p>
                 </CardContent>
                 <CardFooter>
                   <Link href="/workflows" className="w-full">
