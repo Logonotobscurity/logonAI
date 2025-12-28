@@ -5,21 +5,12 @@ import * as React from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Logo } from "./logo";
-import { Menu, X, ChevronDown, Settings, Info, Search, Bell } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter, usePathname } from "next/navigation";
-import { industryCategories } from "@/lib/mock-data";
-import { Badge } from "./ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { WaitlistDialog } from "./waitlist-dialog";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "./ui/navigation-menu";
+
 
 const navLinks = [
   { 
@@ -68,48 +59,17 @@ const navLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { data: session } = useSession();
-  const user = session?.user;
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-  const isDashboard = pathname.startsWith('/dashboard');
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.ctrlKey && e.key === ',') {
-            e.preventDefault();
-            setIsSettingsOpen(true);
-        }
-        if (e.ctrlKey && e.key === 'm') {
-            e.preventDefault();
-            router.push('/conversation');
-        }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [router]);
-
-
-  const handleSignOut = async () => {
-    await signOut({ redirect: true, callbackUrl: '/' });
-  };
-
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-auto flex items-center">
           <Link href="/" className="mr-6 flex items-center gap-2">
             <Logo />
-            {isDashboard && <Badge variant='secondary'>Beta</Badge>}
           </Link>
           
-          {!isDashboard && (
             <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
                <NavigationMenu>
                 <NavigationMenuList>
@@ -122,8 +82,6 @@ export default function Header() {
                             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                                 {link.subItems.map((item) => (
                                   <Link href={item.href} key={item.title}>
-                                    {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
-                                    }
                                     <ListItem
                                         title={item.title}
                                     >
@@ -135,11 +93,9 @@ export default function Header() {
                           </NavigationMenuContent>
                         </>
                       ) : (
-                        <Link href={link.href}>
-                          {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
-                          }
-                          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                            <a>{link.title}</a>
+                        <Link href={link.href} legacyBehavior passHref>
+                          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                            {link.title}
                           </NavigationMenuLink>
                         </Link>
                       )}
@@ -148,125 +104,19 @@ export default function Header() {
                 </NavigationMenuList>
               </NavigationMenu>
             </nav>
-          )}
 
         </div>
 
-         <div className="flex-1 flex justify-center">
-           {isDashboard && (
-              <h1 className="text-xl font-semibold font-headline hidden sm:block">Dashboard</h1>
-           )}
-        </div>
 
-
-        <div className="flex items-center gap-4">
-            {isDashboard && (
-              <>
-                 <Button variant="ghost" size="icon" aria-label="Search">
-                    <Search className="h-5 w-5" />
-                    <span className="sr-only">Search</span>
-                </Button>
-                 <Button variant="ghost" size="icon" aria-label="Notifications">
-                    <Bell className="h-5 w-5" />
-                    <span className="sr-only">Notifications</span>
-                </Button>
-              </>
-            )}
-
-            {user ? (
-            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-              <div className="flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
-                        {user.image && <AvatarImage src={user.image} alt={user.name || ''} />}
-                        <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuItem>
-                        <Link href="/dashboard" className="w-full">Dashboard</Link>
-                    </DropdownMenuItem>
-                     <DropdownMenuItem onSelect={() => setIsSettingsOpen(true)}>
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut}>
-                      Log out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <DialogContent>
-                  <DialogHeader>
-                      <DialogTitle>Advanced Settings</DialogTitle>
-                      <DialogDescription>
-                          Customize your agent and interaction settings. Press Ctrl + , to open this menu.
-                      </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                      <div className="space-y-2">
-                          <Label>AI Model</Label>
-                          <Select defaultValue="gemini">
-                              <SelectTrigger>
-                                  <SelectValue placeholder="Select AI Model" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                  <SelectItem value="gemini">Gemini 1.5 Pro (Default)</SelectItem>
-                                  <SelectItem value="gpt4">GPT-4 Turbo</SelectItem>
-                                  <SelectItem value="claude">Claude 3</SelectItem>
-                              </SelectContent>
-                          </Select>
-                      </div>
-                      <div className="space-y-2">
-                          <Label>Agent Template (Industry)</Label>
-                           <Select defaultValue="default">
-                              <SelectTrigger>
-                                  <SelectValue placeholder="Select Industry Template" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                  {industryCategories.map((cat) => (
-                                    <SelectItem key={cat.value} value={cat.value} disabled={cat.value === 'all'}>
-                                      {cat.label}
-                                    </SelectItem>
-                                  ))}
-                              </SelectContent>
-                          </Select>
-                      </div>
-                      <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                              <Label htmlFor="api-key">Bring Your Own API Key</Label>
-                              <TooltipProvider>
-                                  <Tooltip>
-                                      <TooltipTrigger asChild>
-                                          <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                          <p>Provide your own API key to use a custom model.</p>
-                                      </TooltipContent>
-                                  </Tooltip>
-                              </TooltipProvider>
-                          </div>
-                          <Input id="api-key" type="password" placeholder="Enter your API key" />
-                      </div>
-                      <div className="space-y-2">
-                          <h4 className="font-medium">Keyboard Shortcuts</h4>
-                          <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-                              <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">M</kbd> - Start a new Conversation</li>
-                              <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">S</kbd> - Analyze Screen</li>
-                              <li><kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd> + <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">,</kbd> - Open Settings</li>
-                          </ul>
-                      </div>
-                  </div>
-              </DialogContent>
-            </Dialog>
-          ) : (
-             <Button onClick={() => router.push('/login')}>Login</Button>
-          )}
-
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="md:hidden">
+             <Link href="/">
+              <Logo />
+            </Link>
+          </div>
+          <nav className="hidden md:flex">
+             <Button onClick={() => setIsWaitlistOpen(true)}>Join Waitlist</Button>
+          </nav>
           <button
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -294,17 +144,13 @@ export default function Header() {
                 {link.title}
               </Link>
             ))}
-             <div className="w-full px-4">
-                { user ? 
-                    <div className="w-full" /> 
-                    : 
-                    <Button className="w-full" onClick={() => router.push('/login')}>Login</Button>
-                }
-            </div>
+            <Button onClick={() => { setIsMenuOpen(false); setIsWaitlistOpen(true); }}>Join Waitlist</Button>
           </div>
         </div>
       )}
     </header>
+    <WaitlistDialog open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen} />
+    </>
   );
 }
 

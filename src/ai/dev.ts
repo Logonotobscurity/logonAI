@@ -1,17 +1,15 @@
 
-import { genkit, type Flow } from 'genkit';
+import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/google-genai';
-import * as aiDrivenMatching from './flows/ai-driven-matching';
 
-const flows: Flow[] = [
-    aiDrivenMatching.aiDrivenMatching,
-];
+import '@/ai/flows/ai-driven-matching';
+import '@/ai/flows/text-to-speech';
+import '@/ai/flows/waitlist';
 
 genkit({
   plugins: [
     googleAI(),
   ],
-  flows,
   logLevel: 'debug',
   enableTracing: true,
 });
