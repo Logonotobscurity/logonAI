@@ -7,6 +7,9 @@
   packages = [
     pkgs.nodejs_20
     pkgs.zulu
+    pkgs.openssl_3
+    pkgs.sudo
+    pkgs.docker-compose
   ];
   # Sets environment variables in the workspace
   env = {};
@@ -18,6 +21,7 @@
     projectId = "demo-app";
     services = ["auth" "firestore"];
   };
+  services.docker.enable = true;
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [

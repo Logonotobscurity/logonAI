@@ -21,17 +21,17 @@ model User {
   accounts      Account[]
   sessions      Session[]
   // Your custom fields
-  profile       UserProfile?
+  // profile       UserProfile?
 }
 
-model UserProfile {
-  id          String    @id @default(cuid())
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String    @unique
-  displayName String?
-  photoURL    String?
-  createdAt   DateTime  @default(now())
-}
+// model UserProfile {
+//   id          String    @id @default(cuid())
+//   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId      String    @unique
+//   displayName String?
+//   photoURL    String?
+//   createdAt   DateTime  @default(now())
+// }
 
 
 model Account {

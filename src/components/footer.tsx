@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="flex justify-center md:order-2">
             <div className="flex space-x-4">
               {socialLinks.map((link, index) => (
-                <Link key={index} href={link.href} passHref>
+                <Link key={index} href={link.href}>
                   <Button variant="ghost" size="icon" aria-label={`Social link ${index+1}`}>
                     {link.icon}
                   </Button>

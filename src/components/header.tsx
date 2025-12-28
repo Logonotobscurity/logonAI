@@ -121,7 +121,9 @@ export default function Header() {
                           <NavigationMenuContent>
                             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                                 {link.subItems.map((item) => (
-                                  <Link href={item.href} key={item.title} passHref legacyBehavior>
+                                  <Link href={item.href} key={item.title}>
+                                    {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                                    }
                                     <ListItem
                                         title={item.title}
                                     >
@@ -133,7 +135,9 @@ export default function Header() {
                           </NavigationMenuContent>
                         </>
                       ) : (
-                        <Link href={link.href} legacyBehavior passHref>
+                        <Link href={link.href}>
+                          {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                          }
                           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                             <a>{link.title}</a>
                           </NavigationMenuLink>
